@@ -1,1 +1,41 @@
-
+name: Build PHOTO AI STUDIO Android 0.8
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'index.html'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'icon.svg'
+      - 'package.json'
+      - 'capacitor.config.json'
+      - 'native/**'
+      - 'scripts/**'
+      - '.github/workflows/build-android.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install dependencies
+        run: npm install
+      - name: Generate Android project
+        run: npx cap add android
+      - name: Build debug APK
+        run: npm run build:android
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: PHOTO-AI-STUDIO-0.8-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
