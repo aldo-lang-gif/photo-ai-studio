@@ -1,0 +1,20 @@
+PHOTO AI STUDIO — pacchetto PWA 0.3
+
+Questo pacchetto è pronto per essere pubblicato su un hosting HTTPS statico
+(ad esempio GitHub Pages). Una volta pubblicato, Chrome Android potrà proporre
+"Installa app" / "Aggiungi a schermata Home". Il service worker mette in cache
+l'interfaccia per l'uso offline dopo la prima visita.
+
+PUBBLICAZIONE DA TELEFONO (GitHub Pages)
+1. Accedi a github.com da Chrome e crea un account, se non ne hai già uno.
+2. Crea un nuovo repository pubblico chiamato photo-ai-studio.
+3. Carica i 4 file nella cartella principale: index.html, manifest.webmanifest,
+   sw.js, icon.svg.
+4. In Settings > Pages, scegli Deploy from a branch, branch main, folder /(root),
+   poi Save.
+5. Attendi che GitHub mostri l'indirizzo del sito. Aprilo in Chrome sul telefono.
+6. Menu ⋮ > Aggiungi a schermata Home oppure Installa app.
+
+Nota: GitHub Pages è un hosting HTTPS pubblico. Le foto non vengono inviate
+al sito: le modifiche continuano a essere eseguite localmente nel browser.
+Questa PWA non include ancora funzioni generative AI online.
