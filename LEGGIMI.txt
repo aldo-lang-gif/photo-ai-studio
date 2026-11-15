@@ -1,21 +1,26 @@
-PHOTO AI STUDIO — versione 0.4
+PHOTO AI STUDIO 0.5
 
-Contenuto:
+CONTENUTO
+- index.html: nuova schermata Studio IA e strumenti locali.
+- sw.js: cache offline aggiornata alla versione 0.5.
+- manifest.webmanifest: impostazioni PWA.
+- icon.svg: icona.
+
+COSA FUNZIONA ORA
+- Apertura foto, anteprima, confronto prima/dopo e salvataggio.
 - Regolazioni locali di luminosità, contrasto, saturazione e nitidezza.
-- Miglioramento automatico locale di base (non è AI generativa).
-- Confronto prima/dopo, filtri e salvataggio.
-- Registrazione del service worker per cache offline dopo il primo accesso.
-- Sezione informativa per le future funzioni AI generative.
+- Filtri tono caldo e bianco e nero.
+- Scelta del tipo di modifica IA, descrizione testuale e preparazione/copia delle istruzioni.
 
-PUBBLICAZIONE
-Caricare e sostituire nella cartella principale del repository:
-index.html, manifest.webmanifest, sw.js, icon.svg.
-LEGGIMI.txt può essere sostituito facoltativamente.
+COSA NON È ANCORA ATTIVO
+Le modifiche generative (rimozione oggetti, cambio sfondo, vestiti, pose e miglioramento generativo) NON vengono ancora eseguite. La versione 0.5 prepara le istruzioni e l'interfaccia; il motore locale va installato e collegato quando il PC sarà disponibile. Non è presente alcun invio automatico di foto a servizi esterni.
+
+AGGIORNAMENTO
+1. Apri il repository GitHub photo-ai-studio.
+2. Carica i file estratti nella root del repository.
+3. Conferma il commit. I file con lo stesso nome verranno sostituiti e GitHub conserverà la cronologia.
+4. Apri https://aldo-lang-gif.github.io/photo-ai-studio/
+5. Se appare ancora la versione precedente, chiudi e riapri la pagina o svuota la cache del sito.
 
 IMPORTANTE
-Questa versione NON implementa ancora rimozione intelligente, generazione di sfondi,
-modifica di pose o abbigliamento, né miglioramento AI generativo. Queste funzioni
-richiedono un servizio online dedicato e un backend sicuro. Non inserire chiavi API
-nel codice pubblicato su GitHub Pages.
-Le immagini vengono elaborate localmente nel browser; il codice statico del sito
-è pubblico perché GitHub Pages usa questo repository pubblico.
+Non inserire chiavi API o password in questi file o nel repository pubblico.
