@@ -1,26 +1,16 @@
-PHOTO AI STUDIO 0.5
+PHOTO AI STUDIO 0.6
 
-CONTENUTO
-- index.html: nuova schermata Studio IA e strumenti locali.
-- sw.js: cache offline aggiornata alla versione 0.5.
-- manifest.webmanifest: impostazioni PWA.
-- icon.svg: icona.
+NOVITÀ
+- Interfaccia riorganizzata in tre sezioni: Editor, Galleria e Studio IA.
+- Galleria personale locale basata su IndexedDB: salva, scarica ed elimina le immagini dal browser.
+- Editor con luminosità, contrasto, saturazione, nitidezza, rotazione, tono caldo, bianco e nero, confronto e salvataggio.
+- Service worker con cache aggiornata alla versione 0.6.
 
-COSA FUNZIONA ORA
-- Apertura foto, anteprima, confronto prima/dopo e salvataggio.
-- Regolazioni locali di luminosità, contrasto, saturazione e nitidezza.
-- Filtri tono caldo e bianco e nero.
-- Scelta del tipo di modifica IA, descrizione testuale e preparazione/copia delle istruzioni.
-
-COSA NON È ANCORA ATTIVO
-Le modifiche generative (rimozione oggetti, cambio sfondo, vestiti, pose e miglioramento generativo) NON vengono ancora eseguite. La versione 0.5 prepara le istruzioni e l'interfaccia; il motore locale va installato e collegato quando il PC sarà disponibile. Non è presente alcun invio automatico di foto a servizi esterni.
+PRIVACY E LIMITI
+Le foto della galleria sono memorizzate nel browser del dispositivo e non vengono caricate su un server. Se si cancellano i dati del sito da Chrome, la galleria può andare persa: scaricare le foto importanti sul telefono.
+Le modifiche IA generative non sono ancora attive. Lo Studio IA prepara solo le istruzioni. Il motore locale sarà collegato quando il PC sarà disponibile.
+Non inserire password o chiavi API nel repository pubblico.
 
 AGGIORNAMENTO
-1. Apri il repository GitHub photo-ai-studio.
-2. Carica i file estratti nella root del repository.
-3. Conferma il commit. I file con lo stesso nome verranno sostituiti e GitHub conserverà la cronologia.
-4. Apri https://aldo-lang-gif.github.io/photo-ai-studio/
-5. Se appare ancora la versione precedente, chiudi e riapri la pagina o svuota la cache del sito.
-
-IMPORTANTE
-Non inserire chiavi API o password in questi file o nel repository pubblico.
+Sostituire nella root del repository i file: index.html, sw.js, manifest.webmanifest, icon.svg e LEGGIMI.txt. Confermare il commit su GitHub Pages.
+Dopo l'aggiornamento, chiudere e riaprire la PWA; se mostra ancora la vecchia versione, aprire il sito da Chrome e ricaricare.

@@ -3,172 +3,169 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#10131b">
+<meta name="theme-color" content="#0b1020">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
-<title>PHOTO AI STUDIO 0.5</title>
+<title>PHOTO AI STUDIO 0.6</title>
 <style>
-:root{color-scheme:dark;--bg:#10131b;--panel:#1b2130;--muted:#aab3c5;--accent:#a9b4ff;--line:#30394c;--green:#8ddbb4}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f5f6fb;font:15px system-ui,-apple-system,Segoe UI,sans-serif}
-header{padding:21px 18px 15px;background:linear-gradient(135deg,#27375c,#111722)}
-h1{font-size:21px;letter-spacing:.07em;margin:0 0 5px}header p{color:#c0c9dc;margin:0;font-size:13px}
-main{max-width:780px;margin:auto;padding:14px 14px 38px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 12px}
-button,.filebtn{border:0;border-radius:13px;padding:13px 11px;font-weight:650;font-size:14px;background:var(--accent);color:#101426;text-align:center;cursor:pointer}
-button.secondary,.filebtn.secondary{background:var(--panel);color:#f4f5fb;border:1px solid var(--line)}
-button:disabled{opacity:.45;cursor:not-allowed}
-input[type=file]{display:none}
-.preview{background:#080a10;border:1px solid var(--line);border-radius:18px;min-height:220px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-canvas#photo{display:block;max-width:100%;max-height:54vh;object-fit:contain}
-.empty{text-align:center;padding:30px;color:var(--muted);line-height:1.6}
-.status{font-size:12px;color:var(--muted);margin:9px 3px 14px;line-height:1.5}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin:12px 0}
-.panel h2{font-size:15px;margin:0 0 11px}
-.control{margin:13px 0 16px}.labelrow{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px;color:#e8ebf4;font-size:13px}
-output{color:var(--accent);font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:var(--accent)}
-.small{color:var(--muted);font-size:12px;line-height:1.55}
-.tools{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.tool{border:1px solid var(--line);background:#151b28;color:#f5f6fb;border-radius:13px;padding:12px;text-align:left;min-height:82px}
-.tool.active{border:1px solid var(--accent);background:#252d47;box-shadow:inset 0 0 0 1px #a9b4ff33}
-.tool b{display:block;font-size:13px;margin-bottom:4px}.tool span{font-size:11px;color:var(--muted);line-height:1.4}
-textarea{width:100%;min-height:105px;resize:vertical;border-radius:12px;border:1px solid var(--line);background:#101521;color:#fff;padding:12px;font:14px/1.5 system-ui}
-textarea:focus{outline:2px solid #8495ff;outline-offset:1px}
-.prompt-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
-.notice{border:1px solid #65552c;background:#282316;color:#f4e4b7;padding:11px 12px;border-radius:12px;font-size:12px;line-height:1.5}
-.good{border-color:#315b4b;background:#172a24;color:#c4f1da}
-.feature{padding:10px 0;border-top:1px solid var(--line)}.feature:first-of-type{border-top:0}
-.footer{color:#818ba0;font-size:11px;text-align:center;margin-top:18px;line-height:1.5}
-@media(min-width:600px){.actions{grid-template-columns:repeat(3,1fr)}.tools{grid-template-columns:repeat(3,1fr)}}
+:root{color-scheme:dark;--bg:#0b1020;--panel:#151d31;--panel2:#10182a;--muted:#a7b3ca;--accent:#aab8ff;--line:#2b3854;--good:#9de5c2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#25345a 0,#0b1020 55%);color:#f6f7ff;font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:20px 17px 14px;border-bottom:1px solid #293653;background:#0d1424cc;position:sticky;top:0;z-index:5;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:39px;height:39px;border-radius:13px;background:linear-gradient(145deg,#9eafff,#4556a4);display:grid;place-items:center;font-size:21px;box-shadow:0 6px 20px #6379ff44}
+h1{font-size:17px;letter-spacing:.09em;margin:0}header p{font-size:11px;color:var(--muted);margin:3px 0 0}
+main{max-width:850px;margin:auto;padding:13px 13px 40px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 13px}
+.tab{padding:11px 6px;border-radius:12px;background:#111a2d;border:1px solid var(--line);color:#cbd4e9;font-size:12px;font-weight:700}
+.tab.active{background:#29365a;border-color:#899aff;color:#fff}
+.view{display:none}.view.active{display:block}
+.card{background:linear-gradient(160deg,#19243b,#121a2c);border:1px solid var(--line);border-radius:18px;padding:14px;margin:11px 0;box-shadow:0 10px 28px #0002}
+.card h2{font-size:15px;margin:0 0 11px}.sub{font-size:12px;color:var(--muted);line-height:1.55;margin:0 0 12px}
+button,.filebtn{border:0;border-radius:12px;padding:12px 10px;font-weight:700;font-size:13px;background:var(--accent);color:#10162b;text-align:center;cursor:pointer}
+button.secondary,.filebtn.secondary{background:#202b43;color:#edf0ff;border:1px solid #3a496b}
+button:disabled{opacity:.4;cursor:not-allowed}input[type=file]{display:none}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.actions.three{grid-template-columns:repeat(3,1fr)}
+.preview{background:#070b14;border:1px solid var(--line);border-radius:16px;min-height:190px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+canvas#photo{display:block;max-width:100%;max-height:48vh;object-fit:contain}
+.empty{text-align:center;padding:26px;color:var(--muted);line-height:1.6;font-size:13px}
+.status{font-size:11px;color:var(--muted);margin:8px 3px 12px;line-height:1.5}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:3px 13px}
+.control{margin:9px 0}.labelrow{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;color:#e9edfa;font-size:12px}output{color:var(--accent);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tool{border:1px solid var(--line);background:#10192b;color:#f5f6fb;border-radius:13px;padding:11px;text-align:left;min-height:74px}
+.tool.active{border-color:var(--accent);background:#283455;box-shadow:inset 0 0 0 1px #a9b4ff33}
+.tool b{display:block;font-size:12px;margin-bottom:4px}.tool span{font-size:10px;color:var(--muted);line-height:1.35}
+textarea,input[type=text]{width:100%;border-radius:12px;border:1px solid var(--line);background:#0c1424;color:#fff;padding:11px;font:13px/1.5 system-ui}
+textarea{min-height:88px;resize:vertical}textarea:focus,input:focus{outline:2px solid #8495ff;outline-offset:1px}
+.notice{border:1px solid #63532e;background:#292316;color:#f3e4b8;padding:10px 11px;border-radius:12px;font-size:11px;line-height:1.5}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.gallery-item{border:1px solid var(--line);background:#0e1729;border-radius:13px;overflow:hidden;min-width:0}
+.gallery-item img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#080c15}
+.gallery-meta{padding:8px}.gallery-meta strong{font-size:11px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gallery-meta small{font-size:10px;color:var(--muted)}
+.gallery-actions{display:flex;gap:6px;margin-top:7px}.gallery-actions button{flex:1;padding:8px 5px;font-size:10px}
+.empty-gallery{padding:28px 12px;text-align:center;color:var(--muted);font-size:12px;line-height:1.6;border:1px dashed #3b4966;border-radius:14px}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
+.footer{text-align:center;color:#7f8ba4;font-size:10px;line-height:1.5;margin-top:17px}
+@media(min-width:620px){.tools{grid-template-columns:repeat(3,1fr)}.gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.actions{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
-<header><h1>PHOTO AI STUDIO</h1><p>Laboratorio fotografico personale · versione 0.5</p></header>
+<header><div class="brand"><div class="logo">✦</div><div><h1>PHOTO AI STUDIO</h1><p>LABORATORIO FOTOGRAFICO PERSONALE · 0.6</p></div></div></header>
 <main>
-  <div class="actions">
-    <label class="filebtn" for="pick">＋ Apri foto</label>
-    <button id="save">Salva foto</button>
-    <button class="secondary" id="compare">Prima / Dopo</button>
-    <button class="secondary" id="auto">✨ Migliora automaticamente</button>
-    <button class="secondary" id="reset">Ripristina</button>
-  </div>
-  <input id="pick" type="file" accept="image/*">
-  <div class="preview" id="preview"><div class="empty">📷<br><b>Apri una foto per iniziare</b><br>Le regolazioni di base restano sul telefono.</div></div>
-  <div class="status" id="status">Nessuna foto caricata · strumenti locali disponibili</div>
+<nav class="tabs" aria-label="Sezioni app">
+<button class="tab active" data-view="editor">✦ Editor</button>
+<button class="tab" data-view="gallery">▦ Galleria</button>
+<button class="tab" data-view="studio">◎ Studio IA</button>
+</nav>
 
-  <section class="panel">
-    <h2>Studio IA · prepara una modifica</h2>
-    <p class="small">Scegli il tipo di intervento e descrivi il risultato. Questa versione prepara le istruzioni: il motore generativo locale sarà collegato quando configureremo il PC.</p>
-    <div class="tools" id="tools">
-      <button class="tool active" data-tool="enhance"><b>✨ Migliora foto</b><span>Luce, dettagli e resa naturale</span></button>
-      <button class="tool" data-tool="remove"><b>🪄 Rimuovi oggetti</b><span>Elimina persone o elementi indesiderati</span></button>
-      <button class="tool" data-tool="background"><b>🌅 Cambia sfondo</b><span>Crea o sostituisci l'ambientazione</span></button>
-      <button class="tool" data-tool="clothes"><b>👕 Cambia vestiti</b><span>Prova un nuovo abbigliamento</span></button>
-      <button class="tool" data-tool="pose"><b>🧍 Cambia posa</b><span>Modifica la postura del soggetto</span></button>
-      <button class="tool" data-tool="creative"><b>🎨 Modifica libera</b><span>Descrivi qualsiasi altra modifica</span></button>
-    </div>
-    <div style="height:13px"></div>
-    <label for="prompt" class="small"><b>Descrivi cosa vuoi ottenere</b></label>
-    <textarea id="prompt" placeholder="Esempio: rimuovi la persona sullo sfondo, ricostruendo in modo realistico ciò che c'è dietro. Mantieni invariato il soggetto principale."></textarea>
-    <div class="prompt-actions">
-      <button class="secondary" id="example">Inserisci esempio</button>
-      <button id="prepare">Prepara istruzioni</button>
-    </div>
-    <div id="prepared" class="notice" style="display:none;margin-top:11px"></div>
-    <p class="small" style="margin:10px 0 0">Suggerimento: specifica cosa modificare e cosa deve rimanere identico (viso, capelli, proporzioni, colori o dettagli importanti).</p>
-  </section>
+<section class="view active" id="editor">
+<div class="card">
+<h2>La tua foto</h2>
+<div class="actions">
+<label class="filebtn" for="pick">＋ Apri foto</label>
+<button id="save">Salva risultato</button>
+<button class="secondary" id="compare">Prima / Dopo</button>
+<button class="secondary" id="reset">Ripristina</button>
+</div>
+<input id="pick" type="file" accept="image/*">
+<div style="height:10px"></div>
+<div class="preview" id="preview"><div class="empty">📷<br><b>Apri una foto per iniziare</b><br>Le regolazioni vengono eseguite sul dispositivo.</div></div>
+<div class="status" id="status">Nessuna foto caricata · modalità locale</div>
+<div class="actions three">
+<button class="secondary" id="rotate">↻ Ruota</button>
+<button class="secondary" id="warm">☀ Tono caldo</button>
+<button class="secondary" id="mono">◐ Bianco e nero</button>
+</div>
+</div>
+<div class="card">
+<h2>Regolazioni fotografiche</h2>
+<p class="sub">Controlli locali per rifinire luce, contrasto e colore.</p>
+<div class="controls">
+<div class="control"><div class="labelrow"><label for="brightness">Luminosità</label><output id="brightnessVal">100%</output></div><input id="brightness" type="range" min="0" max="200" value="100"></div>
+<div class="control"><div class="labelrow"><label for="contrast">Contrasto</label><output id="contrastVal">100%</output></div><input id="contrast" type="range" min="0" max="200" value="100"></div>
+<div class="control"><div class="labelrow"><label for="saturation">Saturazione</label><output id="saturationVal">100%</output></div><input id="saturation" type="range" min="0" max="200" value="100"></div>
+<div class="control"><div class="labelrow"><label for="sharpness">Nitidezza</label><output id="sharpnessVal">0</output></div><input id="sharpness" type="range" min="0" max="100" value="0"></div>
+</div>
+<div class="actions" style="margin-top:9px"><button id="auto" class="secondary">✨ Migliora base</button><button id="saveGallery" class="secondary">▦ Salva in galleria</button></div>
+<p class="sub" style="margin:10px 0 0">Il miglioramento base è una regolazione automatica semplice, non un'elaborazione IA generativa.</p>
+</div>
+</section>
 
-  <section class="panel">
-    <h2>Regolazioni manuali · offline</h2>
-    <div class="control"><div class="labelrow"><label for="brightness">Luminosità</label><output id="brightnessVal">100%</output></div><input id="brightness" type="range" min="0" max="200" value="100"></div>
-    <div class="control"><div class="labelrow"><label for="contrast">Contrasto</label><output id="contrastVal">100%</output></div><input id="contrast" type="range" min="0" max="200" value="100"></div>
-    <div class="control"><div class="labelrow"><label for="saturation">Saturazione</label><output id="saturationVal">100%</output></div><input id="saturation" type="range" min="0" max="200" value="100"></div>
-    <div class="control"><div class="labelrow"><label for="sharpness">Nitidezza</label><output id="sharpnessVal">0</output></div><input id="sharpness" type="range" min="0" max="100" value="0"></div>
-    <p class="small">Questi controlli funzionano localmente. Il miglioramento automatico è una regolazione di base, non un restauro IA generativo.</p>
-    <div class="actions" style="margin-top:12px">
-      <button class="secondary" id="warm">Tono caldo</button>
-      <button class="secondary" id="mono">Bianco e nero</button>
-    </div>
-  </section>
+<section class="view" id="gallery">
+<div class="card">
+<h2>Galleria personale</h2>
+<p class="sub">Le immagini salvate qui restano nella memoria del browser su questo dispositivo. Non vengono caricate su un server.</p>
+<div class="row"><button id="galleryRefresh" class="secondary">↻ Aggiorna</button><button id="exportGallery" class="secondary">Esporta elenco</button></div>
+<div style="height:12px"></div>
+<div id="galleryGrid" class="gallery-grid"></div>
+<div id="galleryEmpty" class="empty-gallery">La tua galleria è vuota.<br>Apri una foto nell'Editor e premi “Salva in galleria”.</div>
+<div class="notice" style="margin-top:12px">Nota: i dati del sito possono essere cancellati se elimini i dati di Chrome. Per sicurezza, esporta le foto importanti sul telefono.</div>
+</div>
+</section>
 
-  <section class="panel">
-    <h2>Stato del motore IA</h2>
-    <div class="notice">⏳ Motore IA non ancora collegato. Le richieste generative non vengono eseguite in questa versione.</div>
-    <div class="feature"><b>Passo successivo</b><div class="small">Quando avrai accesso al PC, installeremo il motore locale compatibile con la RTX 4070 Ti e collegheremo questa schermata.</div></div>
-    <div class="feature"><b>Privacy</b><div class="small">Le foto caricate e le regolazioni locali restano nel browser. Il pulsante “Prepara istruzioni” non carica né invia la foto da nessuna parte.</div></div>
-  </section>
-  <p class="footer">PHOTO AI STUDIO 0.5 · PWA personale · funzioni locali disponibili anche offline dopo il primo caricamento. Le modifiche IA generative saranno attivate solo dopo il collegamento al motore.</p>
+<section class="view" id="studio">
+<div class="card">
+<h2>Studio IA · prepara una modifica</h2>
+<p class="sub">Scegli un intervento e descrivi il risultato. In questa versione l'interfaccia è pronta, ma il motore generativo locale verrà collegato quando configureremo il PC.</p>
+<div class="tools" id="tools">
+<button class="tool active" data-tool="enhance"><b>✨ Migliora foto</b><span>Luce, dettagli e resa naturale</span></button>
+<button class="tool" data-tool="remove"><b>🪄 Rimuovi oggetti</b><span>Elimina elementi indesiderati</span></button>
+<button class="tool" data-tool="background"><b>🌅 Cambia sfondo</b><span>Crea o sostituisci l'ambientazione</span></button>
+<button class="tool" data-tool="clothes"><b>👕 Cambia vestiti</b><span>Prova un nuovo abbigliamento</span></button>
+<button class="tool" data-tool="pose"><b>🧍 Cambia posa</b><span>Modifica la postura del soggetto</span></button>
+<button class="tool" data-tool="creative"><b>🎨 Modifica libera</b><span>Descrivi qualsiasi altra modifica</span></button>
+</div>
+<div style="height:12px"></div>
+<label class="sub" for="prompt"><b>Descrivi cosa vuoi ottenere</b></label>
+<textarea id="prompt" placeholder="Esempio: rimuovi la persona sullo sfondo e ricostruisci la scena in modo realistico."></textarea>
+<div class="actions" style="margin-top:9px"><button id="example" class="secondary">Inserisci esempio</button><button id="prepare">Prepara istruzioni</button></div>
+<div id="prepared" class="notice" style="display:none;margin-top:10px"></div>
+</div>
+<div class="card">
+<h2>Connessione al PC</h2>
+<div class="notice">⏳ Motore IA locale non ancora collegato. Quando avrai il PC, prepareremo il collegamento sicuro alla RTX 4070 Ti.</div>
+<p class="sub" style="margin:10px 0 0">L'app sul telefono sarà il pannello di controllo; il PC eseguirà i modelli IA. Nessuna chiave API o password va inserita nel repository pubblico.</p>
+</div>
+</section>
+<p class="footer">PHOTO AI STUDIO 0.6 · PWA personale · editor e galleria locali · motore IA da collegare</p>
 </main>
 <script>
 const $=id=>document.getElementById(id);
-let image=null, showingOriginal=false, preset=null, selectedTool='enhance';
-const canvas=document.createElement('canvas');
-const ctx=canvas.getContext('2d',{willReadFrequently:true});
-const preview=$('preview');
-const examples={
- enhance:'Migliora questa fotografia con un risultato naturale e realistico. Correggi luce, colori e dettagli senza cambiare il volto, l’identità o le proporzioni del soggetto.',
- remove:'Rimuovi dalla fotografia l’elemento indesiderato che indicherò, ricostruendo lo sfondo in modo credibile. Mantieni invariati soggetto principale, volto, colori e inquadratura.',
- background:'Sostituisci lo sfondo con un ambiente realistico e ben illuminato. Mantieni il soggetto principale riconoscibile, con contorni naturali e luce coerente.',
- clothes:'Cambia l’abbigliamento del soggetto con quello che descriverò. Mantieni invariati volto, capelli, corporatura, posa e identità.',
- pose:'Modifica la posa del soggetto come descritto, mantenendo il più possibile invariati volto, identità, abbigliamento e caratteristiche personali.',
- creative:'Modifica la fotografia seguendo questa descrizione, mantenendo realistici luce, prospettiva, dettagli e coerenza visiva.'
-};
-function setStatus(s){$('status').textContent=s}
-function draw(){
- if(!image)return;
- const max=1800, scale=Math.min(1,max/Math.max(image.naturalWidth,image.naturalHeight));
- canvas.width=Math.round(image.naturalWidth*scale);canvas.height=Math.round(image.naturalHeight*scale);
- ctx.filter=showingOriginal?'none':`brightness(${$('brightness').value}%) contrast(${$('contrast').value}%) saturate(${$('saturation').value}%)`;
- ctx.drawImage(image,0,0,canvas.width,canvas.height);ctx.filter='none';
- if(!showingOriginal && preset==='warm'){ctx.fillStyle='rgba(255,150,65,.12)';ctx.fillRect(0,0,canvas.width,canvas.height)}
- if(!showingOriginal && preset==='mono'){
-  const d=ctx.getImageData(0,0,canvas.width,canvas.height),p=d.data;
-  for(let i=0;i<p.length;i+=4){const y=.299*p[i]+.587*p[i+1]+.114*p[i+2];p[i]=p[i+1]=p[i+2]=y}
-  ctx.putImageData(d,0,0);
- }
- if(!showingOriginal && Number($('sharpness').value)>0) sharpen(Number($('sharpness').value)/100);
- preview.replaceChildren(canvas);
-}
-function sharpen(amount){
- const w=canvas.width,h=canvas.height;if(w*h>1800000)return;
- const src=ctx.getImageData(0,0,w,h),out=ctx.createImageData(w,h),a=src.data,b=out.data,k=amount*.65;b.set(a);
- for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){let i=(y*w+x)*4;for(let c=0;c<3;c++)b[i+c]=Math.max(0,Math.min(255,a[i+c]*(1+4*k)-k*(a[i-4]+a[i+4]+a[i-4*w]+a[i+4*w])))}
- ctx.putImageData(out,0,0);
-}
+let image=null,showingOriginal=false,preset=null,selectedTool='enhance',rotation=0,currentName='photo';
+const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true}),preview=$('preview');
+const DB_NAME='photo-ai-studio-db',STORE='gallery';
+function status(s){$('status').textContent=s}
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>req.result.createObjectStore(STORE,{keyPath:'id',autoIncrement:true});req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function galleryAdd(blob,name){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).add({blob,name,created:Date.now()});tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error)})}
+async function galleryAll(){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly'),r=tx.objectStore(STORE).getAll();r.onsuccess=()=>resolve(r.result.sort((a,b)=>b.created-a.created));r.onerror=()=>reject(r.error)})}
+async function galleryDelete(id){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(Number(id));tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
+function setView(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v==='gallery')renderGallery()}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+function resetControls(){['brightness','contrast','saturation'].forEach(id=>$(id).value=100);$('sharpness').value=0;rotation=0;updateLabels()}
 function updateLabels(){['brightness','contrast','saturation','sharpness'].forEach(id=>$(id+'Val').textContent=$(id).value+(id==='sharpness'?'':'%'))}
-function resetControls(){['brightness','contrast','saturation'].forEach(id=>$(id).value=100);$('sharpness').value=0;updateLabels()}
-$('pick').addEventListener('change',e=>{
- const f=e.target.files[0];if(!f)return;
- const url=URL.createObjectURL(f),im=new Image();
- im.onload=()=>{image=im;showingOriginal=false;preset=null;resetControls();draw();setStatus(`${f.name} · ${im.naturalWidth} × ${im.naturalHeight} · elaborazione locale`);URL.revokeObjectURL(url)};
- im.onerror=()=>{setStatus('Impossibile aprire questa immagine.');URL.revokeObjectURL(url)};im.src=url;
-});
-['brightness','contrast','saturation','sharpness'].forEach(id=>$(id).addEventListener('input',()=>{preset=null;showingOriginal=false;updateLabels();draw()}));
-$('auto').onclick=()=>{if(!image){setStatus('Prima apri una foto.');return}resetControls();$('brightness').value=106;$('contrast').value=112;$('saturation').value=108;$('sharpness').value=12;updateLabels();preset=null;showingOriginal=false;draw();setStatus('Miglioramento locale di base applicato · non è AI generativa')};
-$('reset').onclick=()=>{if(!image)return;resetControls();preset=null;showingOriginal=false;draw();setStatus('Regolazioni ripristinate')};
-$('compare').onclick=()=>{if(!image)return;showingOriginal=!showingOriginal;draw();setStatus(showingOriginal?'Anteprima originale':'Anteprima modificata')};
-$('warm').onclick=()=>{if(!image){setStatus('Prima apri una foto.');return}preset='warm';showingOriginal=false;draw()};
-$('mono').onclick=()=>{if(!image){setStatus('Prima apri una foto.');return}preset='mono';showingOriginal=false;draw()};
-$('save').onclick=()=>{
- if(!image){setStatus('Prima apri una foto.');return}
- if(showingOriginal){showingOriginal=false;draw()}
- canvas.toBlob(blob=>{if(!blob){setStatus('Non è stato possibile salvare la foto.');return}
- const a=document.createElement('a'),u=URL.createObjectURL(blob);a.href=u;a.download='photo-ai-studio.jpg';a.click();setTimeout(()=>URL.revokeObjectURL(u),1500);setStatus('Foto elaborata pronta nei Download.')},'image/jpeg',.94)
-};
-document.querySelectorAll('.tool').forEach(btn=>btn.addEventListener('click',()=>{
- document.querySelectorAll('.tool').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedTool=btn.dataset.tool;$('prompt').placeholder=examples[selectedTool];
-}));
+function sharpen(amount){const w=canvas.width,h=canvas.height;if(w*h>1600000)return;const src=ctx.getImageData(0,0,w,h),out=ctx.createImageData(w,h),a=src.data,b=out.data,k=amount*.6;b.set(a);for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){let i=(y*w+x)*4;for(let c=0;c<3;c++)b[i+c]=Math.max(0,Math.min(255,a[i+c]*(1+4*k)-k*(a[i-4]+a[i+4]+a[i-4*w]+a[i+4*w])))}ctx.putImageData(out,0,0)}
+function draw(){if(!image)return;const max=1800,scale=Math.min(1,max/Math.max(image.naturalWidth,image.naturalHeight));let w=Math.round(image.naturalWidth*scale),h=Math.round(image.naturalHeight*scale);if(Math.abs(rotation)%180===90){[w,h]=[h,w]}canvas.width=w;canvas.height=h;ctx.save();ctx.translate(w/2,h/2);ctx.rotate(rotation*Math.PI/180);ctx.filter=showingOriginal?'none':`brightness(${$('brightness').value}%) contrast(${$('contrast').value}%) saturate(${$('saturation').value}%)`;ctx.drawImage(image,-Math.round(image.naturalWidth*scale)/2,-Math.round(image.naturalHeight*scale)/2,Math.round(image.naturalWidth*scale),Math.round(image.naturalHeight*scale));ctx.restore();ctx.filter='none';if(!showingOriginal&&preset==='warm'){ctx.fillStyle='rgba(255,150,65,.12)';ctx.fillRect(0,0,w,h)}if(!showingOriginal&&preset==='mono'){const d=ctx.getImageData(0,0,w,h),p=d.data;for(let i=0;i<p.length;i+=4){const y=.299*p[i]+.587*p[i+1]+.114*p[i+2];p[i]=p[i+1]=p[i+2]=y}ctx.putImageData(d,0,0)}if(!showingOriginal&&Number($('sharpness').value)>0)sharpen(Number($('sharpness').value)/100);preview.replaceChildren(canvas)}
+$('pick').onchange=e=>{const f=e.target.files[0];if(!f)return;currentName=f.name.replace(/\.[^.]+$/,'');const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{image=im;showingOriginal=false;preset=null;resetControls();draw();status(`${f.name} · ${im.naturalWidth} × ${im.naturalHeight} · elaborazione locale`);URL.revokeObjectURL(url)};im.onerror=()=>{status('Impossibile aprire questa immagine.');URL.revokeObjectURL(url)};im.src=url};
+['brightness','contrast','saturation','sharpness'].forEach(id=>$(id).oninput=()=>{preset=null;showingOriginal=false;updateLabels();draw()});
+$('compare').onclick=()=>{if(!image)return;showingOriginal=!showingOriginal;draw();status(showingOriginal?'Anteprima originale':'Anteprima modificata')};
+$('reset').onclick=()=>{if(!image)return;resetControls();preset=null;showingOriginal=false;draw();status('Regolazioni ripristinate')};
+$('rotate').onclick=()=>{if(!image)return;rotation=(rotation+90)%360;showingOriginal=false;draw();status('Foto ruotata')};
+$('warm').onclick=()=>{if(!image){status('Prima apri una foto.');return}preset='warm';showingOriginal=false;draw()};
+$('mono').onclick=()=>{if(!image){status('Prima apri una foto.');return}preset='mono';showingOriginal=false;draw()};
+$('auto').onclick=()=>{if(!image){status('Prima apri una foto.');return}resetControls();$('brightness').value=106;$('contrast').value=112;$('saturation').value=108;$('sharpness').value=12;updateLabels();preset=null;showingOriginal=false;draw();status('Regolazione automatica di base applicata')};
+function exportBlob(){return new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.94))}
+$('save').onclick=async()=>{if(!image){status('Prima apri una foto.');return}if(showingOriginal){showingOriginal=false;draw()}const blob=await exportBlob();if(!blob){status('Salvataggio non riuscito.');return}const a=document.createElement('a'),u=URL.createObjectURL(blob);a.href=u;a.download='photo-ai-studio-modificata.jpg';a.click();setTimeout(()=>URL.revokeObjectURL(u),1500);status('Foto salvata nei Download.')};
+$('saveGallery').onclick=async()=>{if(!image){status('Prima apri una foto.');return}if(showingOriginal){showingOriginal=false;draw()}const blob=await exportBlob();try{await galleryAdd(blob,currentName+'-modificata.jpg');status('Foto salvata nella galleria personale.')}catch(e){status('Memoria del browser non disponibile o piena.')}};
+async function renderGallery(){const grid=$('galleryGrid'),empty=$('galleryEmpty');grid.innerHTML='';let items=[];try{items=await galleryAll()}catch(e){empty.textContent='Impossibile leggere la galleria su questo browser.';empty.style.display='block';return}empty.style.display=items.length?'none':'block';for(const item of items){const url=URL.createObjectURL(item.blob),card=document.createElement('div');card.className='gallery-item';const img=document.createElement('img');img.src=url;img.alt=item.name;const meta=document.createElement('div');meta.className='gallery-meta';const name=document.createElement('strong');name.textContent=item.name;const date=document.createElement('small');date.textContent=new Date(item.created).toLocaleString('it-IT');const actions=document.createElement('div');actions.className='gallery-actions';const dl=document.createElement('button');dl.className='secondary';dl.textContent='Scarica';dl.onclick=()=>{const a=document.createElement('a');a.href=url;a.download=item.name;a.click()};const del=document.createElement('button');del.className='secondary';del.textContent='Elimina';del.onclick=async()=>{if(confirm('Eliminare questa foto dalla galleria?')){await galleryDelete(item.id);URL.revokeObjectURL(url);renderGallery()}};actions.append(dl,del);meta.append(name,date,actions);card.append(img,meta);grid.append(card)}}
+$('galleryRefresh').onclick=renderGallery;
+$('exportGallery').onclick=async()=>{const items=await galleryAll();if(!items.length){alert('La galleria è vuota.');return}const lines=items.map(x=>`${new Date(x.created).toLocaleString('it-IT')} — ${x.name}`);const blob=new Blob([lines.join('\n')],{type:'text/plain'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='photo-ai-studio-galleria.txt';a.click();URL.revokeObjectURL(url)};
+const examples={enhance:'Migliora questa fotografia con un risultato naturale e realistico. Correggi luce, colori e dettagli senza cambiare volto, identità o proporzioni.',remove:'Rimuovi l’elemento indesiderato e ricostruisci lo sfondo in modo credibile. Mantieni invariato il soggetto principale.',background:'Sostituisci lo sfondo con un ambiente realistico. Mantieni il soggetto principale riconoscibile e la luce coerente.',clothes:'Cambia l’abbigliamento come descritto. Mantieni invariati volto, capelli, corporatura e identità.',pose:'Modifica la posa come descritto, mantenendo il più possibile invariati volto, identità e abbigliamento.',creative:'Modifica la fotografia seguendo questa descrizione, mantenendo luce, prospettiva e dettagli realistici.'};
+document.querySelectorAll('.tool').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));b.classList.add('active');selectedTool=b.dataset.tool;$('prompt').placeholder=examples[selectedTool]});
 $('example').onclick=()=>{$('prompt').value=examples[selectedTool];$('prompt').focus()};
-$('prepare').onclick=async()=>{
- const description=$('prompt').value.trim();
- if(!description){$('prompt').focus();setStatus('Scrivi prima cosa vuoi modificare.');return}
- const full=`PHOTO AI STUDIO · ${selectedTool.toUpperCase()}\nIstruzione: ${description}\nVincoli consigliati: mantieni coerenza fotografica, prospettiva, luce e dettagli naturali. Non alterare caratteristiche non richieste.`;
- $('prepared').style.display='block';$('prepared').textContent='Istruzioni pronte. Il motore IA non è ancora collegato: nessuna modifica generativa è stata eseguita.';
- try{await navigator.clipboard.writeText(full);setStatus('Istruzioni copiate negli appunti. Potrai riutilizzarle quando collegheremo il motore IA.')}
- catch(e){setStatus('Istruzioni preparate nella schermata. La copia automatica non è disponibile in questo browser.')}
-};
+$('prepare').onclick=async()=>{const d=$('prompt').value.trim();if(!d){$('prompt').focus();return}const full=`PHOTO AI STUDIO · ${selectedTool.toUpperCase()}\nIstruzione: ${d}\nVincoli: mantieni coerenza fotografica, prospettiva, luce e dettagli naturali. Non alterare caratteristiche non richieste.`;$('prepared').style.display='block';$('prepared').textContent='Istruzioni pronte. Il motore IA non è ancora collegato: nessuna modifica generativa è stata eseguita.';try{await navigator.clipboard.writeText(full);status('Istruzioni copiate negli appunti.')}catch(e){status('Istruzioni preparate nella schermata.')}};
 updateLabels();
-if('serviceWorker' in navigator && location.protocol.startsWith('http')){
- window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').then(()=>setStatus('PHOTO AI STUDIO 0.5 · modalità offline pronta dopo il primo caricamento')).catch(()=>setStatus('Modalità online disponibile · cache offline non attivata')));
-}
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').then(()=>status('PHOTO AI STUDIO 0.6 · modalità offline pronta dopo il primo caricamento')).catch(()=>status('Modalità online disponibile · cache offline non attivata')));
 </script>
 </body></html>
