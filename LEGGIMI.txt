@@ -1,20 +1,21 @@
-PHOTO AI STUDIO — pacchetto PWA 0.3
+PHOTO AI STUDIO — versione 0.4
 
-Questo pacchetto è pronto per essere pubblicato su un hosting HTTPS statico
-(ad esempio GitHub Pages). Una volta pubblicato, Chrome Android potrà proporre
-"Installa app" / "Aggiungi a schermata Home". Il service worker mette in cache
-l'interfaccia per l'uso offline dopo la prima visita.
+Contenuto:
+- Regolazioni locali di luminosità, contrasto, saturazione e nitidezza.
+- Miglioramento automatico locale di base (non è AI generativa).
+- Confronto prima/dopo, filtri e salvataggio.
+- Registrazione del service worker per cache offline dopo il primo accesso.
+- Sezione informativa per le future funzioni AI generative.
 
-PUBBLICAZIONE DA TELEFONO (GitHub Pages)
-1. Accedi a github.com da Chrome e crea un account, se non ne hai già uno.
-2. Crea un nuovo repository pubblico chiamato photo-ai-studio.
-3. Carica i 4 file nella cartella principale: index.html, manifest.webmanifest,
-   sw.js, icon.svg.
-4. In Settings > Pages, scegli Deploy from a branch, branch main, folder /(root),
-   poi Save.
-5. Attendi che GitHub mostri l'indirizzo del sito. Aprilo in Chrome sul telefono.
-6. Menu ⋮ > Aggiungi a schermata Home oppure Installa app.
+PUBBLICAZIONE
+Caricare e sostituire nella cartella principale del repository:
+index.html, manifest.webmanifest, sw.js, icon.svg.
+LEGGIMI.txt può essere sostituito facoltativamente.
 
-Nota: GitHub Pages è un hosting HTTPS pubblico. Le foto non vengono inviate
-al sito: le modifiche continuano a essere eseguite localmente nel browser.
-Questa PWA non include ancora funzioni generative AI online.
+IMPORTANTE
+Questa versione NON implementa ancora rimozione intelligente, generazione di sfondi,
+modifica di pose o abbigliamento, né miglioramento AI generativo. Queste funzioni
+richiedono un servizio online dedicato e un backend sicuro. Non inserire chiavi API
+nel codice pubblicato su GitHub Pages.
+Le immagini vengono elaborate localmente nel browser; il codice statico del sito
+è pubblico perché GitHub Pages usa questo repository pubblico.
