@@ -1,0 +1,6 @@
+{
+  "appId": "com.photoaistudio.app",
+  "appName": "PHOTO AI STUDIO",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
