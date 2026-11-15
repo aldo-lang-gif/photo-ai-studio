@@ -1,1 +1,33 @@
-
+const fs = require('fs');
+const path = require('path');
+const { execFileSync } = require('child_process');
+const root = process.cwd();
+const www = path.join(root, 'www');
+fs.mkdirSync(www, { recursive: true });
+for (const file of ['index.html', 'sw.js', 'manifest.webmanifest', 'icon.svg']) {
+  if (!fs.existsSync(path.join(root, file))) throw new Error(`File richiesto mancante nella root: ${file}`);
+  fs.copyFileSync(path.join(root, file), path.join(www, file));
+}
+let html = fs.readFileSync(path.join(www, 'index.html'), 'utf8');
+html = html.replace(/PHOTO AI STUDIO 0\.6/g, 'PHOTO AI STUDIO 0.8');
+html = html.replace(/LABORATORIO FOTOGRAFICO PERSONALE · 0\.6/g, 'LABORATORIO FOTOGRAFICO PERSONALE · 0.8');
+html = html.replace(/PHOTO AI STUDIO 0\.6 · PWA personale/g, 'PHOTO AI STUDIO 0.8 · Android IA locale');
+const panel = `\n<section class="card" id="deviceAi"><h2>IA del telefono · strumenti locali</h2><p class="sub">Analisi eseguite sul dispositivo tramite Google ML Kit. Non generano nuovi vestiti o sfondi.</p><div class="actions three"><button id="aiObjects" class="secondary">Rileva oggetti</button><button id="aiPose" class="secondary">Rileva posa</button><button id="aiSegment" class="secondary">Separa persona</button></div><div id="aiDeviceStatus" class="notice" style="margin-top:10px">Apri una foto nell'Editor. Queste funzioni sono disponibili nell'APK Android.</div><div id="aiMaskPreview" style="margin-top:10px"></div></section>\n`;
+html = html.replace('</section>\n\n<section class="view" id="gallery">', '</section>' + panel + '\n<section class="view" id="gallery">');
+const script = `\n<script src="./native-bridge.js"></script><script>\n(()=>{const status=document.getElementById('aiDeviceStatus');const getImage=()=>{if(!window.photoAiIsNative||!window.PhotoAiNative){throw new Error('Apri la versione APK Android per usare l’IA del telefono.')}if(!window.image && !document.querySelector('#preview canvas'))throw new Error('Prima apri una foto nell’Editor.');return document.querySelector('#preview canvas').toDataURL('image/jpeg',0.88).split(',')[1]};const run=async(method)=>{try{status.textContent='Elaborazione sul telefono…';const imageBase64=getImage();const result=await window.PhotoAiNative[method]({imageBase64});if(method==='detectObjects'){const list=result.objects||[];status.textContent=list.length?'Oggetti rilevati: '+list.map(x=>x.label+(x.confidence?' ('+Math.round(x.confidence*100)+'%)':'')).join(', '):'Nessun oggetto riconosciuto.';}else if(method==='detectPose'){const pts=result.landmarks||[];status.textContent=pts.length?'Posa rilevata: '+pts.length+' punti del corpo individuati.':'Non è stata rilevata una persona.';}else{const holder=document.getElementById('aiMaskPreview');holder.innerHTML='';const img=document.createElement('img');img.alt='Maschera di segmentazione della persona';img.style.maxWidth='100%';img.style.borderRadius='12px';img.src='data:image/png;base64,'+result.maskBase64;holder.appendChild(img);status.textContent='Maschera della persona creata ('+result.width+' × '+result.height+'). È una maschera, non ancora il ritaglio finale trasparente.';}}catch(e){status.textContent=e.message||'Operazione non riuscita.';}};document.getElementById('aiObjects').onclick=()=>run('detectObjects');document.getElementById('aiPose').onclick=()=>run('detectPose');document.getElementById('aiSegment').onclick=()=>run('segmentPerson');if(!window.photoAiIsNative)status.textContent='Questi strumenti saranno attivi nell’APK Android compilato da GitHub Actions.';})();\n</script>\n`;
+html = html.replace('</body>', script + '</body>');
+fs.writeFileSync(path.join(www, 'index.html'), html);
+execFileSync('npx', ['esbuild', 'native/bridge.js', '--bundle', '--format=iife', '--outfile=www/native-bridge.js'], { stdio: 'inherit' });
+const appGradle = path.join(root, 'android/app/build.gradle');
+const appGradleKts = path.join(root, 'android/app/build.gradle.kts');
+const gradlePath = fs.existsSync(appGradle) ? appGradle : appGradleKts;
+if (!fs.existsSync(gradlePath)) throw new Error('Non trovo android/app/build.gradle generato da Capacitor.');
+let gradle = fs.readFileSync(gradlePath, 'utf8');
+const deps = `\n    implementation 'com.google.mlkit:object-detection:17.0.2'\n    implementation 'com.google.mlkit:pose-detection-accurate:18.0.0-beta5'\n    implementation 'com.google.mlkit:segmentation-selfie:16.0.0-beta6'\n`;
+if (gradlePath.endsWith('.kts')) throw new Error('Questo pacchetto attende il file Gradle Groovy generato da Capacitor.');
+if (!gradle.includes('com.google.mlkit:object-detection')) gradle = gradle.replace(/dependencies\s*\{/, match => match + deps);
+fs.writeFileSync(gradlePath, gradle);
+const javaDir = path.join(root, 'android/app/src/main/java/com/photoaistudio/app');
+fs.mkdirSync(javaDir, { recursive: true });
+for (const file of ['MainActivity.java', 'PhotoAiNativePlugin.java']) fs.copyFileSync(path.join(root, 'native', file), path.join(javaDir, file));
+console.log('Preparazione Android completata.');
