@@ -1,4 +1,4 @@
-package com.photoaistudio.app;
+package com.photoaistudio.app09;
 
 import android.os.Bundle;
 import com.getcapacitor.BridgeActivity;
