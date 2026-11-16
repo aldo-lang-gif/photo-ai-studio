@@ -1,8 +1,8 @@
 {
   "name": "photo-ai-studio-android",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
-  "description": "PHOTO AI STUDIO Android wrapper with on-device ML Kit tools",
+  "description": "PHOTO AI STUDIO Android 0.9 with editable projects and on-device ML Kit tools",
   "scripts": {
     "build:android": "node scripts/prepare-android.js && npx cap sync android && cd android && ./gradlew assembleDebug"
   },
