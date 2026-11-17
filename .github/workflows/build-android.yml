@@ -1,4 +1,4 @@
-name: Build PHOTO AI STUDIO Android 0.9
+name: Build PHOTO AI STUDIO Android 0.9.1
 on:
   workflow_dispatch:
   push:
@@ -11,6 +11,7 @@ on:
       - 'capacitor.config.json'
       - 'native/**'
       - 'scripts/**'
+      - 'update.json'
       - '.github/workflows/build-android.yml'
 jobs:
   build:
@@ -36,6 +37,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: PHOTO-AI-STUDIO-0.9-debug-apk
+          name: PHOTO-AI-STUDIO-0.9.1-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
