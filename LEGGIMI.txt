@@ -1,16 +1,15 @@
-PHOTO AI STUDIO 0.6
+PHOTO AI STUDIO 0.9.1 - aggiornamento interfaccia
 
-NOVITÀ
-- Interfaccia riorganizzata in tre sezioni: Editor, Galleria e Studio IA.
-- Galleria personale locale basata su IndexedDB: salva, scarica ed elimina le immagini dal browser.
-- Editor con luminosità, contrasto, saturazione, nitidezza, rotazione, tono caldo, bianco e nero, confronto e salvataggio.
-- Service worker con cache aggiornata alla versione 0.6.
+FILE DA SOSTITUIRE NEL REPOSITORY:
+- scripts/prepare-android-091.js
+- capacitor.config.json
+- update.json
 
-PRIVACY E LIMITI
-Le foto della galleria sono memorizzate nel browser del dispositivo e non vengono caricate su un server. Se si cancellano i dati del sito da Chrome, la galleria può andare persa: scaricare le foto importanti sul telefono.
-Le modifiche IA generative non sono ancora attive. Lo Studio IA prepara solo le istruzioni. Il motore locale sarà collegato quando il PC sarà disponibile.
-Non inserire password o chiavi API nel repository pubblico.
+NON sostituire index.html, scripts/prepare-android.js, package.json o i file native.
+Il package.json attuale esegue già:
+node scripts/prepare-android.js && node scripts/prepare-android-091.js && npx cap sync android && cd android && ./gradlew assembleDebug
 
-AGGIORNAMENTO
-Sostituire nella root del repository i file: index.html, sw.js, manifest.webmanifest, icon.svg e LEGGIMI.txt. Confermare il commit su GitHub Pages.
-Dopo l'aggiornamento, chiudere e riaprire la PWA; se mostra ancora la vecchia versione, aprire il sito da Chrome e ricaricare.
+L'identificativo Android resta com.photoaistudio.app09 e versionCode diventa 3.
+Il pulsante aggiornamenti controlla update.json e apre le Releases per il download: non installa APK in silenzio. La conferma finale resta all'utente in Android.
+
+Dopo aver sostituito i tre file, avvia GitHub Actions e verifica che la build sia verde prima di installare l'APK.

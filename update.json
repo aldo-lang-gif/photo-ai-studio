@@ -2,5 +2,5 @@
   "version": "0.9.1",
   "versionCode": 3,
   "platform": "android",
-  "instructionsUrl": "https://github.com/aldo-lang-gif/photo-ai-studio/actions"
+  "releaseUrl": "https://github.com/aldo-lang-gif/photo-ai-studio/releases/latest"
 }
