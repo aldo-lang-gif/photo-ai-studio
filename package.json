@@ -1,17 +1,11 @@
 {
   "name": "photo-ai-studio-android",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": true,
-  "description": "PHOTO AI STUDIO Android 0.9.1",
+  "description": "PHOTO AI STUDIO Android 0.9.2",
   "scripts": {
-    "build:android": "node scripts/prepare-android.js && node scripts/prepare-android-091.js && npx cap sync android && cd android && ./gradlew assembleDebug"
+    "build:android": "node scripts/prepare-android.js && node scripts/prepare-android-091.js && node scripts/prepare-android-092.js && npx cap sync android && cd android && ./gradlew assembleDebug"
   },
-  "dependencies": {
-    "@capacitor/android": "^8.0.0",
-    "@capacitor/core": "^8.0.0"
-  },
-  "devDependencies": {
-    "@capacitor/cli": "^8.0.0",
-    "esbuild": "^0.25.0"
-  }
+  "dependencies": {"@capacitor/android": "^8.0.0", "@capacitor/core": "^8.0.0"},
+  "devDependencies": {"@capacitor/cli": "^8.0.0", "esbuild": "^0.25.0"}
 }
