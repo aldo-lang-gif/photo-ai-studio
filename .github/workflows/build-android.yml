@@ -37,12 +37,16 @@ jobs:
           grep -q "versionName '0.9.3'" android/app/build.gradle
           grep -q 'photo-ai-093-version-guard' www/index.html
           test -s android/app/build/outputs/apk/debug/app-debug.apk
-      - name: Publish APK
+      - name: Create or update GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           APK=android/app/build/outputs/apk/debug/app-debug.apk
-          gh release create v0.9.3 "$APK#PHOTO-AI-STUDIO-0.9.3.apk" --title 'PHOTO AI STUDIO 0.9.3' --notes 'Build correttiva con cache aggiornata e verifica della versione generata.'
+          if gh release view v0.9.3 >/dev/null 2>&1; then
+            gh release upload v0.9.3 "$APK#PHOTO-AI-STUDIO-0.9.3.apk" --clobber
+          else
+            gh release create v0.9.3 "$APK#PHOTO-AI-STUDIO-0.9.3.apk"               --title 'PHOTO AI STUDIO 0.9.3'               --notes 'Build correttiva con cache aggiornata e verifica della versione generata.'
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: PHOTO-AI-STUDIO-0.9.3-debug-apk
