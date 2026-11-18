@@ -1,4 +1,5 @@
 export default {
+  // PIXORA AI CORE - Git integration test
   async fetch(request, env) {
     const url = new URL(request.url);
 
