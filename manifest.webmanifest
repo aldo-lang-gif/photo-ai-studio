@@ -1,12 +1,19 @@
 {
-  "name": "PHOTO AI STUDIO",
-  "short_name": "Photo AI",
-  "description": "Laboratorio fotografico personale",
+  "name": "PIXORA AI",
+  "short_name": "PIXORA",
+  "description": "Laboratorio creativo fotografico con intelligenza artificiale",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b1020",
-  "theme_color": "#0b1020",
+  "background_color": "#101326",
+  "theme_color": "#101326",
   "orientation": "portrait",
-  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }
