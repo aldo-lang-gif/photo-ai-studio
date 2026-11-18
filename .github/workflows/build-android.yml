@@ -1,4 +1,4 @@
-name: Build PHOTO AI STUDIO Android 0.9.3
+name: Build PIXORA AI Android 0.9.4
 on:
   workflow_dispatch:
   push:
@@ -33,22 +33,23 @@ jobs:
       - name: Build and verify
         run: |
           npm run build:android
-          grep -q 'versionCode 5' android/app/build.gradle
-          grep -q "versionName '0.9.3'" android/app/build.gradle
-          grep -q 'photo-ai-093-version-guard' www/index.html
+          grep -Eq 'versionCode[[:space:]]*=?[[:space:]]*6' android/app/build.gradle
+          grep -Eq "versionName[[:space:]]*=?[[:space:]]*'0.9.4'" android/app/build.gradle
+          grep -q 'pixora-ai-094-brand-guard' www/index.html
+          grep -q 'PIXORA AI 0.9.4' www/index.html
           test -s android/app/build/outputs/apk/debug/app-debug.apk
       - name: Create or update GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           APK=android/app/build/outputs/apk/debug/app-debug.apk
-          if gh release view v0.9.3 >/dev/null 2>&1; then
-            gh release upload v0.9.3 "$APK#PHOTO-AI-STUDIO-0.9.3.apk" --clobber
+          if gh release view v0.9.4 >/dev/null 2>&1; then
+            gh release upload v0.9.4 "$APK#PIXORA-AI-0.9.4.apk" --clobber
           else
-            gh release create v0.9.3 "$APK#PHOTO-AI-STUDIO-0.9.3.apk"               --title 'PHOTO AI STUDIO 0.9.3'               --notes 'Build correttiva con cache aggiornata e verifica della versione generata.'
+            gh release create v0.9.4 "$APK#PIXORA-AI-0.9.4.apk" --title 'PIXORA AI 0.9.4' --notes 'Prima versione con brand PIXORA AI, rimozione strumenti non funzionanti e controllo aggiornamenti corretto.'
           fi
       - uses: actions/upload-artifact@v4
         with:
-          name: PHOTO-AI-STUDIO-0.9.3-debug-apk
+          name: PIXORA-AI-0.9.4-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
