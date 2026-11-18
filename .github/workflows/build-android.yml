@@ -1,4 +1,4 @@
-name: Build PIXORA AI Android 0.9.5
+name: Build PIXORA AI Android 0.9.6
 on:
   workflow_dispatch:
   push:
@@ -30,27 +30,40 @@ jobs:
           java-version: '21'
       - run: npm install
       - run: npx cap add android
-      - name: Build and verify
+      - name: Prepare permanent signing key
+        env:
+          PIXORA_KEYSTORE_BASE64: ${{ secrets.PIXORA_KEYSTORE_BASE64 }}
         run: |
+          test -n "$PIXORA_KEYSTORE_BASE64" || (echo 'Missing GitHub secret PIXORA_KEYSTORE_BASE64' && exit 1)
+          mkdir -p android/app
+          echo "$PIXORA_KEYSTORE_BASE64" | base64 --decode > android/app/pixora-release.jks
+          test -s android/app/pixora-release.jks
+      - name: Build and verify
+        env:
+          PIXORA_KEYSTORE_FILE: ${{ github.workspace }}/android/app/pixora-release.jks
+          PIXORA_KEYSTORE_PASSWORD: ${{ secrets.PIXORA_KEYSTORE_PASSWORD }}
+          PIXORA_KEY_ALIAS: pixora
+          PIXORA_KEY_PASSWORD: ${{ secrets.PIXORA_KEYSTORE_PASSWORD }}
+        run: |
+          test -n "$PIXORA_KEYSTORE_PASSWORD" || (echo 'Missing GitHub secret PIXORA_KEYSTORE_PASSWORD' && exit 1)
           npm run build:android
-          grep -Eq 'versionCode[[:space:]]*=?[[:space:]]*7' android/app/build.gradle
-          grep -Eq "versionName[[:space:]]*=?[[:space:]]*'0.9.5'" android/app/build.gradle
-          grep -q 'pixora-ai-095-identity-guard' www/index.html
-          grep -q 'PIXORA AI 0.9.5' www/index.html
-          test -s android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+          grep -Eq 'versionCode[[:space:]]+8' android/app/build.gradle
+          grep -Eq "versionName[[:space:]]+'0.9.6'" android/app/build.gradle
+          grep -q 'pixora-ai-096-updater' www/index.html
+          grep -q 'PixoraUpdaterPlugin' android/app/src/main/java/com/photoaistudio/app09/MainActivity.java
           test -s android/app/build/outputs/apk/debug/app-debug.apk
       - name: Create or update GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           APK=android/app/build/outputs/apk/debug/app-debug.apk
-          if gh release view v0.9.5 >/dev/null 2>&1; then
-            gh release upload v0.9.5 "$APK#PIXORA-AI-0.9.5.apk" --clobber
+          if gh release view v0.9.6 >/dev/null 2>&1; then
+            gh release upload v0.9.6 "$APK#PIXORA-AI-0.9.6.apk" --clobber
           else
-            gh release create v0.9.5 "$APK#PIXORA-AI-0.9.5.apk" --title 'PIXORA AI 0.9.5' --notes 'Logo interno e icona Android aggiornati; versione visualizzata corretta.'
+            gh release create v0.9.6 "$APK#PIXORA-AI-0.9.6.apk" --title 'PIXORA AI 0.9.6' --notes 'Aggiornamento integrato nell’app e firma Android permanente.'
           fi
       - uses: actions/upload-artifact@v4
         with:
-          name: PIXORA-AI-0.9.5-debug-apk
+          name: PIXORA-AI-0.9.6-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
