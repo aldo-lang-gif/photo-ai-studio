@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pixora-ai-core",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-18",
+  "workers_dev": true,
+  "ai": {
+    "binding": "AI"
+  },
+  "ratelimits": [
+    {
+      "name": "RL",
+      "namespace_id": "918273645",
+      "simple": {
+        "limit": 3,
+        "period": 60
+      }
+    }
+  ]
+}
