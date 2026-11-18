@@ -1,4 +1,4 @@
-const CACHE='pixora-ai-v094';
+const CACHE='pixora-ai-v095';
 const PREFIX='pixora-ai-';
 const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())));

@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<defs><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+<defs><linearGradient id="pixora" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
 <rect width="512" height="512" rx="112" fill="#101326"/>
-<path d="M148 390V122h126c83 0 132 43 132 116s-49 116-132 116h-53v36h-73zm73-109h53c38 0 59-15 59-43s-21-43-59-43h-53v86z" fill="url(#p)"/>
-<rect x="348" y="340" width="32" height="32" rx="8" fill="#ec4899"/>
+<path d="M112 410V102h162c99 0 157 54 157 143s-58 143-157 143h-67v22H112zm95-116h67c43 0 66-18 66-49s-23-49-66-49h-67v98z" fill="url(#pixora)"/>
+<path d="M391 58l17 43 43 17-43 17-17 43-17-43-43-17 43-17z" fill="#f0abfc"/>
+<circle cx="397" cy="390" r="26" fill="#22d3ee"/>
 </svg>
