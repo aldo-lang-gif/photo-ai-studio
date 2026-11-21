@@ -5,7 +5,7 @@
   "description": "PIXORA AI Android 0.9.7",
   "scripts": {
     "build:android": "node scripts/prepare-android.js && node scripts/prepare-android-091.js && node scripts/prepare-android-092.js && node scripts/prepare-android-093.js && node scripts/prepare-android-094.js && node scripts/prepare-android-095.js && node scripts/prepare-android-096.js && node scripts/prepare-android-097.js && npx cap sync android && cd android && ./gradlew assembleDebug",
-    "test:worker": "node tests/worker-097-smoke.mjs"
+    "test:worker": "node test/worker-097-smoke.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
