@@ -12,6 +12,14 @@ for (const file of ['index.html', 'sw.js', 'manifest.webmanifest', 'icon.svg']) 
 }
 
 let html = fs.readFileSync(path.join(www, 'index.html'), 'utf8');
+html = html.replace(
+  'function draw(){if(!image)return;const max=1800,scale=Math.min(1,max/Math.max(image.naturalWidth,image.naturalHeight));',
+  'let pixoraAIOutputBlob=null,pixoraLoadingAIOutput=false;\nfunction draw(){if(!pixoraLoadingAIOutput)pixoraAIOutputBlob=null;if(!image)return;const max=1800,scale=Math.min(1,max/Math.max(image.naturalWidth,image.naturalHeight));'
+);
+html = html.replace(
+  "function exportBlob(){return new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.94))}",
+  "function exportBlob(){if(pixoraAIOutputBlob)return Promise.resolve(pixoraAIOutputBlob);return new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.94))}"
+);
 html = html.replace("indexedDB.open(DB_NAME,1)", "indexedDB.open(DB_NAME,2)");
 html = html.replace(
   "req.onupgradeneeded=()=>req.result.createObjectStore(STORE,{keyPath:'id',autoIncrement:true});",
@@ -160,6 +168,29 @@ html = html.replace('</body>', `
     activeProjectId=await projectAdd(item);
     $('projectStatus').textContent='Progetto salvato automaticamente · '+item.name;
   }
+  // Public, narrow bridge for PIXORA AI 0.9.7 cloud enhancement.
+  // The source file stays local until the user explicitly taps the AI button.
+  window.pixoraGetOriginalBlob = () => originalBlob;
+  window.pixoraApplyEnhancedBlob = async (blob) => {
+    if (!(blob instanceof Blob) || !blob.size) throw new Error('Risultato AI non valido.');
+    if (image) { await ensureProject(); await saveVersion(); }
+    const url = URL.createObjectURL(blob);
+    try {
+      const im = new Image();
+      await new Promise((resolve, reject) => { im.onload = resolve; im.onerror = reject; im.src = url; });
+      image = im;
+      pixoraAIOutputBlob = blob; pixoraLoadingAIOutput = true;
+      originalBlob = blob;
+      activeProjectId = null;
+      currentName = (currentName || 'Foto') + '-AI';
+      showingOriginal = false; preset = null; rotation = 0;
+      ['brightness','contrast','saturation'].forEach(id => $(id).value = 100);
+      $('sharpness').value = 0; updateLabels(); draw(); pixoraLoadingAIOutput = false; fitZoom();
+      status('Miglioramento AI completato · ' + im.naturalWidth + ' × ' + im.naturalHeight);
+      await ensureProject(); await renderProjects();
+    } finally { URL.revokeObjectURL(url); }
+  };
+
   function queueProjectSave() {
     if (!image || !originalBlob) return;
     clearTimeout(saveTimer);
@@ -168,14 +199,14 @@ html = html.replace('</body>', `
   async function loadProjectImage(blob, state, id, name) {
     const url=URL.createObjectURL(blob), im=new Image();
     im.onload=async()=>{
-      image=im; originalBlob=blob; activeProjectId=id || null;
+      image=im; originalBlob=blob; activeProjectId=id || null; pixoraAIOutputBlob=(name||'').endsWith('-AI')?blob:null; pixoraLoadingAIOutput=true;
       currentName=name || 'Progetto';
       $('brightness').value=state?.brightness ?? 100;
       $('contrast').value=state?.contrast ?? 100;
       $('saturation').value=state?.saturation ?? 100;
       $('sharpness').value=state?.sharpness ?? 0;
       rotation=state?.rotation ?? 0; preset=state?.preset ?? null;
-      showingOriginal=false; updateLabels(); draw(); fitZoom();
+      showingOriginal=false; updateLabels(); draw(); pixoraLoadingAIOutput=false; fitZoom();
       status('Progetto riaperto · originale conservato');
       $('projectStatus').textContent='Progetto in modifica · '+currentName;
       URL.revokeObjectURL(url);

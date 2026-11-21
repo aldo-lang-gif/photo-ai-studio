@@ -15,5 +15,5 @@ if(!/\bversionCode\s*=?\s*5\b/.test(g)||!/\bversionName\s*=?\s*['"]0\.9\.3['"]/.
   throw new Error('Versione Gradle non impostata correttamente. Controllare android/app/build.gradle.');
 }
 fs.writeFileSync(gradlePath,g,'utf8');
-const m=path.join(root,'update.json');if(fs.existsSync(m)){const d=JSON.parse(fs.readFileSync(m,'utf8'));d.version='0.9.3';d.versionCode=5;d.releaseUrl='https://github.com/aldo-lang-gif/photo-ai-studio/releases/tag/v0.9.3';fs.writeFileSync(m,JSON.stringify(d,null,2)+'\\n');}
+const m=path.join(root,'update.json');if(fs.existsSync(m)){const d=JSON.parse(fs.readFileSync(m,'utf8'));d.version='0.9.3';d.versionCode=5;d.releaseUrl='https://github.com/aldo-lang-gif/photo-ai-studio/releases/tag/v0.9.3';fs.writeFileSync(m,JSON.stringify(d,null,2)+'\n');}
 console.log('0.9.3: versionCode 5 e versionName 0.9.3 verificati.');
