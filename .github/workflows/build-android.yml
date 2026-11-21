@@ -58,7 +58,16 @@ jobs:
           grep -q 'saveToGallery' native/PhotoAiNativePlugin.java
           grep -q 'PixoraUpdaterPlugin' android/app/src/main/java/com/photoaistudio/app09/MainActivity.java
           test -s android/app/build/outputs/apk/debug/app-debug.apk
+      # Upload the APK first: this remains downloadable even if Release upload fails.
+      - name: Save APK as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PIXORA-AI-0.9.9-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
       - name: Create or update GitHub Release
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -68,8 +77,3 @@ jobs:
           else
             gh release create v0.9.9 "$APK#PIXORA-AI-0.9.9.apk" --title 'PIXORA AI 0.9.9' --notes 'ESRGAN handling for large originals and native Android gallery save.'
           fi
-      - uses: actions/upload-artifact@v4
-        with:
-          name: PIXORA-AI-0.9.9-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
