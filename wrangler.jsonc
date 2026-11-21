@@ -7,6 +7,9 @@
   "ai": {
     "binding": "AI"
   },
+  "images": {
+    "binding": "IMAGES"
+  },
   "ratelimits": [
     {
       "name": "RL",
