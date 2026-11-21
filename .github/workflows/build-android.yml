@@ -1,4 +1,4 @@
-name: Build PIXORA AI Android 0.9.9
+name: Build PIXORA AI Android 0.10.0
 on:
   workflow_dispatch:
   push:
@@ -51,18 +51,17 @@ jobs:
         run: |
           test -n "$PIXORA_KEYSTORE_PASSWORD" || (echo 'Missing GitHub secret PIXORA_KEYSTORE_PASSWORD' && exit 1)
           npm run build:android
-          grep -Eq 'versionCode[[:space:]]+11' android/app/build.gradle
-          grep -Eq "versionName[[:space:]]+'0.9.9'" android/app/build.gradle
-          grep -q 'pixora-ai-096-updater' www/index.html
-          grep -q 'pixora-ai-099-gallery-native' www/index.html
+          grep -Eq 'versionCode[[:space:]]+12' android/app/build.gradle
+          grep -Eq "versionName[[:space:]]+'0.10.0'" android/app/build.gradle
+          grep -q 'pixora-ai-010-single-screen' www/index.html
+          grep -q 'pixora-ai-097-panel' www/index.html
           grep -q 'saveToGallery' native/PhotoAiNativePlugin.java
           grep -q 'PixoraUpdaterPlugin' android/app/src/main/java/com/photoaistudio/app09/MainActivity.java
           test -s android/app/build/outputs/apk/debug/app-debug.apk
-      # Upload the APK first: this remains downloadable even if Release upload fails.
       - name: Save APK as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PIXORA-AI-0.9.9-apk
+          name: PIXORA-AI-0.10.0-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
@@ -72,8 +71,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           APK=android/app/build/outputs/apk/debug/app-debug.apk
-          if gh release view v0.9.9 >/dev/null 2>&1; then
-            gh release upload v0.9.9 "$APK#PIXORA-AI-0.9.9.apk" --clobber
+          if gh release view v0.10.0 >/dev/null 2>&1; then
+            gh release upload v0.10.0 "$APK#PIXORA-AI-0.10.0.apk" --clobber
           else
-            gh release create v0.9.9 "$APK#PIXORA-AI-0.9.9.apk" --title 'PIXORA AI 0.9.9' --notes 'ESRGAN handling for large originals and native Android gallery save.'
+            gh release create v0.10.0 "$APK#PIXORA-AI-0.10.0.apk" --title 'PIXORA AI 0.10.0' --notes 'Single-screen AI photo editor; direct save to Android Gallery.'
           fi
