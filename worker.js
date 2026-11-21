@@ -43,7 +43,7 @@ export default {
       return json({
         ok: true, worker: "PIXORA AI CORE", version: "0.9.8",
         imageBinding: Boolean(env.IMAGES), rateLimiter: Boolean(env.RL),
-        engine: "Cloudflare Images AI upscaling (ESRGAN)", inferenceExecuted: false
+        engine: "Cloudflare Images binding (resize/encode)", inferenceExecuted: false
       }, 200, cors);
     }
     if (url.pathname !== "/enhance" || request.method !== "POST") {
@@ -92,15 +92,15 @@ export default {
 
       const result = await env.IMAGES.input(imageStream())
         .transform({ width: outWidth, height: outHeight, fit: { mode: "contain", upscale: "generate" } })
-        .output({ format: "image/jpeg", quality: 92 })
-        .response({ headers: {
-          "Cache-Control": "no-store",
-          "X-Pixora-AI-Engine": "Cloudflare-Images-ESRGAN",
-          "X-Pixora-Output-Width": String(outWidth),
-          "X-Pixora-Output-Height": String(outHeight),
-          ...cors
-        }});
-      return result;
+        .output({ format: "image/jpeg", quality: 92 });
+
+      return result.response({ headers: {
+        "Cache-Control": "no-store",
+        "X-Pixora-AI-Engine": "Cloudflare-Images-binding",
+        "X-Pixora-Output-Width": String(outWidth),
+        "X-Pixora-Output-Height": String(outHeight),
+        ...cors
+      }});
     } catch (error) {
       const message = String(error?.message || error || "");
       if (/\b9422\b|quota|usage limit reached|transformation limit reached/i.test(message))
