@@ -1,8 +1,13 @@
 package com.photoaistudio.app09;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 
 import com.getcapacitor.JSArray;
@@ -23,6 +28,7 @@ import com.google.mlkit.vision.segmentation.Segmenter;
 import com.google.mlkit.vision.segmentation.selfie.SelfieSegmenterOptions;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 @CapacitorPlugin(name = "PhotoAiNative")
@@ -32,6 +38,72 @@ public class PhotoAiNativePlugin extends Plugin {
     if (data == null || data.isEmpty()) return null;
     byte[] bytes = Base64.decode(data, Base64.DEFAULT);
     return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+  }
+
+  @PluginMethod
+  public void saveToGallery(PluginCall call) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+      call.reject("Il salvataggio diretto in Galleria richiede Android 10 o successivo.");
+      return;
+    }
+    String encoded = call.getString("imageBase64");
+    if (encoded == null || encoded.isEmpty()) {
+      call.reject("Immagine da salvare mancante.");
+      return;
+    }
+    String mimeType = call.getString("mimeType", "image/jpeg");
+    if (!mimeType.equals("image/jpeg") && !mimeType.equals("image/png") && !mimeType.equals("image/webp")) {
+      call.reject("Formato immagine non supportato.");
+      return;
+    }
+    String fileName = call.getString("fileName", "PIXORA-" + System.currentTimeMillis() + ".jpg");
+    fileName = fileName.replaceAll("[^A-Za-z0-9._-]", "_");
+    byte[] imageBytes;
+    try {
+      imageBytes = Base64.decode(encoded, Base64.DEFAULT);
+    } catch (IllegalArgumentException error) {
+      call.reject("Dati immagine non validi.", error);
+      return;
+    }
+    if (imageBytes.length == 0) {
+      call.reject("Immagine vuota.");
+      return;
+    }
+
+    Uri imageUri = null;
+    try {
+      ContentValues values = new ContentValues();
+      values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
+      values.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
+      values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/PIXORA AI");
+      values.put(MediaStore.Images.Media.IS_PENDING, 1);
+
+      imageUri = getContext().getContentResolver().insert(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values
+      );
+      if (imageUri == null) throw new IllegalStateException("Android non ha creato il file nella Galleria.");
+
+      try (OutputStream output = getContext().getContentResolver().openOutputStream(imageUri, "w")) {
+        if (output == null) throw new IllegalStateException("Impossibile aprire il file di destinazione.");
+        output.write(imageBytes);
+        output.flush();
+      }
+
+      ContentValues published = new ContentValues();
+      published.put(MediaStore.Images.Media.IS_PENDING, 0);
+      getContext().getContentResolver().update(imageUri, published, null, null);
+
+      JSObject result = new JSObject();
+      result.put("saved", true);
+      result.put("uri", imageUri.toString());
+      result.put("fileName", fileName);
+      call.resolve(result);
+    } catch (Exception error) {
+      if (imageUri != null) {
+        try { getContext().getContentResolver().delete(imageUri, null, null); } catch (Exception ignored) {}
+      }
+      call.reject("Salvataggio nella Galleria non riuscito: " + error.getMessage(), error);
+    }
   }
 
   @PluginMethod
