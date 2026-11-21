@@ -2,7 +2,6 @@
 // Privacy-first photo upscaling through Cloudflare Images AI ESRGAN.
 // The Worker does not persist uploaded image bytes.
 const MAX_BYTES = 20 * 1024 * 1024;
-// AVIF input is not enabled on every Cloudflare Images plan; accept portable formats only.
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const ALLOWED_ORIGINS = new Set([
   "https://aldo-lang-gif.github.io",
@@ -81,7 +80,9 @@ export default {
       if (!bytes.byteLength) return json({ ok: false, error: "File immagine vuoto." }, 400, cors);
       if (bytes.byteLength > MAX_BYTES) return json({ ok: false, error: "Immagine troppo grande: massimo 20 MB." }, 413, cors);
 
-      const info = await env.IMAGES.info(new Blob([bytes]).stream());
+      // Cloudflare Images .info() and .input() accept a ReadableStream.
+      const imageStream = () => new Blob([bytes], { type: contentType }).stream();
+      const info = await env.IMAGES.info(imageStream());
       const width = Number(info?.width), height = Number(info?.height);
       if (!Number.isFinite(width) || !Number.isFinite(height) || width < 1 || height < 1) {
         return json({ ok: false, error: "Impossibile leggere le dimensioni della foto." }, 422, cors);
@@ -90,9 +91,6 @@ export default {
         return json({ ok: false, error: "Foto troppo grande da elaborare in sicurezza (massimo 40 megapixel in ingresso)." }, 413, cors);
       }
 
-      // Request a true AI enlargement (2x where possible), never an accidental
-      // same-size or over-limit transform. Cloudflare Images applies ESRGAN
-      // for upscale=generate and then fits the requested output dimensions.
       const scale = Math.min(2, 8192 / width, 8192 / height, Math.sqrt(80_000_000 / (width * height)));
       if (!Number.isFinite(scale) || scale <= 1.001) {
         return json({ ok: false, error: "La foto è già troppo grande per un ingrandimento AI sicuro (massimo 8192 px per lato)." }, 413, cors);
@@ -103,7 +101,7 @@ export default {
         return json({ ok: false, error: "Dimensioni di uscita non supportate per l’ingrandimento AI." }, 413, cors);
       }
 
-      const result = await env.IMAGES.input(bytes)
+      const result = await env.IMAGES.input(imageStream())
         .transform({
           width: outWidth,
           height: outHeight,
@@ -126,6 +124,7 @@ export default {
       if (/\b9422\b|quota|usage limit reached|transformation limit reached/i.test(message)) {
         return json({ ok: false, error: "Quota gratuita Cloudflare Images raggiunta. Non verrà attivato alcun servizio a pagamento: riprova il mese prossimo." }, 429, cors);
       }
+      console.error("PIXORA /enhance failed:", error);
       return json({ ok: false, error: "Elaborazione AI non riuscita. Riprova più tardi.", detail: message.slice(0, 180) }, 502, cors);
     }
   }
