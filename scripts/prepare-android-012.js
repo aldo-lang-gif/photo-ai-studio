@@ -1,49 +1,75 @@
+// PIXORA AI 0.12.0 — consolidate AI tools in the main editor preview.
 const fs=require("fs"),path=require("path"),root=process.cwd();
 const hp=path.join(root,"www","index.html"),gp=path.join(root,"android","app","build.gradle");
-if(!fs.existsSync(hp)||!fs.existsSync(gp))throw new Error("Progetto Android 0.12.0 incompleto.");
+if(!fs.existsSync(hp)||!fs.existsSync(gp))throw Error("Progetto Android 0.12.0 incompleto.");
 let h=fs.readFileSync(hp,"utf8");
-for(const m of ['pixora-ai-011-editor','pixora-ai-011-client','pixora-ai-097-panel','pixoraApplyEnhancedBlob'])if(!h.includes(m))throw new Error("Base 0.11.0 incompleta: "+m);
-const client=`<script id="pixora-ai-012-client">
-(()=>{const $=id=>document.getElementById(id),API="https://pixora-ai-core.aldomoro5525.workers.dev";
-const panel=$("pixora-ai-097-panel"),preview=$("preview"),prompt=$("pixora-ai-011-prompt"),edit=$("pixora-ai-011-run"),up=$("pixora-ai-097-run"),status=$("pixora-ai-011-status");
-if(!panel||!preview||!prompt||!edit||!up||!status)return;
-$("photo-ai-092-prompt")?.remove();panel.querySelector("h3")?.remove();panel.querySelectorAll(":scope > p").forEach(n=>n.remove());
-$("pixora-ai-011-result-wrap")?.remove();$("pixora-ai-097-status")?.remove();
-const old=$("pixora-ai-011-editor");old?.querySelector("label")?.remove();old?.querySelector("button")?.remove();old?.querySelector('[role="status"]')?.remove();
-edit.textContent="✦ MODIFICA CON IA";up.textContent="✨ AUMENTA RISOLUZIONE 2×";
-const actions=document.createElement("div");actions.id="pixora-ai-012-actions";actions.style.cssText="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px";actions.append(edit,up);
-for(const b of [edit,up])b.style.cssText="width:100%;min-height:48px;padding:11px 7px;border:0;border-radius:12px;background:linear-gradient(120deg,#8b5cf6,#22d3ee);color:#0b1020;font-size:12px;font-weight:900;white-space:normal";
-panel.append(prompt,actions,status);panel.style.cssText="margin:10px 0 5px;padding:11px;border:1px solid #6553a5;border-radius:14px;background:linear-gradient(145deg,#171d3b,#17142d);color:#f5f3ff";
-prompt.style.cssText="display:block;width:100%;min-height:66px;max-height:120px;box-sizing:border-box;border-radius:12px;border:1px solid #465276;background:#0c1424;color:#fff;padding:11px;font:13px/1.45 system-ui";
-prompt.placeholder="Es. Cambia il colore dei capelli in biondo, mantenendo invariati volto e ambiente…";
-status.style.cssText="font-size:11px;line-height:1.45;margin-top:8px;color:#d8d5ff;min-height:16px";preview.insertAdjacentElement("afterend",panel);
-let busy=false;
-async function run(kind){if(busy)return;const source=window.pixoraGetOriginalBlob?.(),instruction=prompt.value.trim();
-if(!source){status.textContent="Prima apri una foto nell'Editor.";return;}
-if(source.size>20*1024*1024){status.textContent="La foto supera il limite di 20 MB.";return;}
-const type=(source.type||"image/jpeg").toLowerCase();if(!["image/jpeg","image/png","image/webp"].includes(type)){status.textContent="Formato non supportato. Usa JPEG, PNG o WebP.";return;}
-if(kind==="edit"&&instruction.length<4){status.textContent="Scrivi la modifica che desideri nel campo qui sopra.";prompt.focus();return;}
-if(kind==="edit"&&instruction.length>1200){status.textContent="Descrizione troppo lunga: massimo 1200 caratteri.";return;}
-busy=true;edit.disabled=true;up.disabled=true;status.textContent=kind==="edit"?"PIXORA sta modificando la foto…":"PIXORA sta aumentando la risoluzione…";
-try{let r;if(kind==="edit"){const f=new FormData();f.append("image",source,"pixora-source");f.append("prompt",instruction);r=await fetch(API+"/edit",{method:"POST",body:f});}
-else r=await fetch(API+"/enhance",{method:"POST",headers:{"Content-Type":type},body:source});
-if(!r.ok){let d={};try{d=await r.json()}catch{}throw new Error((d.error||("Servizio non disponibile ("+r.status+")"))+(d.detail?" · "+d.detail:""));}
-const blob=await r.blob();if(!blob.size||!blob.type.startsWith("image/"))throw new Error("Il servizio non ha restituito un'immagine valida.");
-if(typeof window.pixoraApplyEnhancedBlob!=="function")throw new Error("Collegamento all'anteprima dell'Editor non disponibile.");
-await window.pixoraApplyEnhancedBlob(blob);const w=r.headers.get("X-Pixora-Output-Width"),hh=r.headers.get("X-Pixora-Output-Height");
-status.textContent=(kind==="edit"?"Modifica completata":"Risoluzione aumentata")+(w&&hh?" · "+w+" × "+hh:"")+". Premi «Prima / Dopo» per confrontare con l'originale.";
-}catch(e){status.textContent="Elaborazione non riuscita: "+(e?.message||"errore sconosciuto");}
-finally{busy=false;edit.disabled=false;up.disabled=false;edit.textContent="✦ MODIFICA CON IA";up.textContent="✨ AUMENTA RISOLUZIONE 2×";}}
-edit.onclick=()=>run("edit");up.onclick=()=>run("enhance");
+for(const m of ["pixora-ai-097-panel","pixora-ai-011-editor","pixora-ai-011-client"])if(!h.includes(m))throw Error("Base 0.11.0 non riconosciuta: "+m);
+const css=`
+/* PIXORA AI 0.12.0 — unified AI workspace */
+#pixora-ai-097-panel{display:none!important}
+#pixora-ai-012-controls{display:block;margin:12px 0 2px;padding:13px;border:1px solid #6553a5;border-radius:15px;background:linear-gradient(145deg,#171d3b,#17142d)}
+#pixora-ai-012-controls label{display:block;font-size:12px;font-weight:800;margin:0 0 7px}
+#pixora-ai-012-controls textarea{width:100%;min-height:70px;box-sizing:border-box;border-radius:11px;border:1px solid #465276;background:#0c1424;color:#fff;padding:11px;font:13px/1.45 system-ui}
+#pixora-ai-012-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+#pixora-ai-012-actions button{width:100%;min-height:46px;padding:9px 6px;border:0;border-radius:11px;color:#09101f;font-size:11px;line-height:1.25;font-weight:900}
+#pixora-ai-011-run{background:linear-gradient(120deg,#8b5cf6,#22d3ee)!important}
+#pixora-ai-097-run{background:linear-gradient(120deg,#39b6e8,#7ee7ce)!important}
+#pixora-ai-011-status,#pixora-ai-097-status{font-size:11px;line-height:1.4;color:#d8d5ff;margin-top:7px}
+#pixora-ai-011-result-wrap{display:none!important}
+#preview #pixora-ai-012-generated{display:block;max-width:100%;max-height:52vh;width:auto;height:auto;object-fit:contain}
+`;
+if(!h.includes("PIXORA AI 0.12.0 — unified AI workspace"))h=h.replace("</style>",css+"</style>");
+const hook='   image.src=resultUrl;\n   wrap.hidden=false;';
+if(!h.includes(hook))throw Error("Hook risultato IA 0.11.0 non trovato.");
+h=h.replace(hook,hook+'\n   window.pixoraShowGeneratedResult?.(blob);');
+const controller=`<script id="pixora-ai-012-unified-editor">
+(()=>{
+ const $=id=>document.getElementById(id),preview=$("preview"),editor=$("editor"),panel=$("pixora-ai-097-panel"),promptPanel=$("pixora-ai-011-editor");
+ const upscale=$("pixora-ai-097-run"),edit=$("pixora-ai-011-run"),textarea=$("pixora-ai-011-prompt"),editStatus=$("pixora-ai-011-status"),upStatus=$("pixora-ai-097-status");
+ if(!preview||!editor||!panel||!promptPanel||!upscale||!edit||!textarea||!editStatus||!upStatus)throw Error("Controlli IA esistenti non trovati.");
+ const label=promptPanel.querySelector('label[for="pixora-ai-011-prompt"]');
+ if(!label)throw Error("Etichetta descrizione non trovata.");
+ label.textContent="Descrivi la modifica da applicare";
+ textarea.placeholder="Es. Aggiungi un cappellino nero, realistico, senza modificare il viso.";
+ textarea.style.minHeight="70px";
+ const workspace=document.createElement("section");workspace.id="pixora-ai-012-controls";workspace.setAttribute("aria-label","Strumenti IA");
+ const actions=document.createElement("div");actions.id="pixora-ai-012-actions";actions.append(edit,upscale);
+ workspace.append(label,textarea,actions,editStatus,upStatus);
+ $("pixora-ai-011-result-wrap")?.remove();promptPanel.remove();panel.remove();
+ const status=$("status");if(status)status.insertAdjacentElement("afterend",workspace);else preview.insertAdjacentElement("afterend",workspace);
+ let url=null,img=null,after=true;
+ window.pixoraShowGeneratedResult=blob=>{
+  if(!(blob instanceof Blob)||!blob.size)throw Error("Risultato IA vuoto.");
+  const canvas=preview.querySelector("canvas");if(!canvas)throw Error("Anteprima originale non disponibile.");
+  if(url)URL.revokeObjectURL(url);url=URL.createObjectURL(blob);
+  if(!img){img=document.createElement("img");img.id="pixora-ai-012-generated";img.alt="Foto modificata con IA";}
+  img.src=url;canvas.style.display="none";preview.appendChild(img);after=true;
+  const b=$("compare");if(b)b.textContent="Prima / Dopo";
+  if(status)status.textContent="Risultato IA visualizzato · premi Prima / Dopo per confrontarlo con l'originale.";
+ };
+ const compare=$("compare");
+ if(compare)compare.addEventListener("click",e=>{
+  if(!img||!img.isConnected)return;e.preventDefault();e.stopImmediatePropagation();
+  const canvas=preview.querySelector("canvas");if(!canvas)return;
+  after=!after;canvas.style.display=after?"none":"";img.style.display=after?"":"none";
+  compare.textContent=after?"Mostra originale":"Mostra risultato";
+  if(status)status.textContent=after?"Risultato IA":"Foto originale";
+ },true);
+ const picker=$("pick");if(picker)picker.addEventListener("change",()=>{
+  if(url){URL.revokeObjectURL(url);url=null;}if(img){img.remove();img=null;}
+  after=true;if(compare)compare.textContent="Prima / Dopo";
+ },true);
+ document.title="PIXORA AI 0.12.0";
+ const brand=document.querySelector("header h1");if(brand)brand.textContent="PIXORA AI";
+ const tagline=document.querySelector("header p");if(tagline)tagline.textContent="AI PHOTO EDITOR";
 })();
 </script>`;
-for(const id of ["pixora-ai-011-client","pixora-ai-098-client"]){const a=h.indexOf('<script id="'+id+'">');if(a>=0){const b=h.indexOf("</script>",a);if(b<0)throw Error("Script non chiuso "+id);h=h.slice(0,a)+h.slice(b+9);}}
-if(!h.includes("pixora-ai-012-client"))h=h.replace("</body>",client+"\n</body>");
-h=h.replaceAll("0.11.0","0.12.0").replace("</style>","\n#save,#saveGallery,#saveProjectVersion{display:none!important}\n</style>");
-if(!h.includes("pixora-ai-012-client"))throw Error("Client 0.12.0 non inserito.");
+if(!h.includes('id="pixora-ai-012-unified-editor"'))h=h.replace("</body>",controller+"</body>");
+for(const m of ["pixora-ai-012-unified-editor","pixora-ai-012-controls","pixora-ai-012-generated","pixoraShowGeneratedResult?.(blob)"])if(!h.includes(m))throw Error("Patch incompleta: "+m);
+h=h.replaceAll("0.11.0","0.12.0").replaceAll("v0.11.0","v0.12.0");
 fs.writeFileSync(hp,h,"utf8");
 let g=fs.readFileSync(gp,"utf8").replace(/(\bversionCode\s*=?\s*)\d+/,"$1"+"14").replace(/(\bversionName\s*=?\s*)['"][^'"]+['"]/,"$1'0.12.0'");
-if(!/\bversionCode\s*=?\s*14\b/.test(g)||!/\bversionName\s*=?\s*['"]0\.12\.0['"]/.test(g))throw Error("Versione Gradle 0.12.0 non impostata.");
+if(!/\bversionCode\s*=?\s*14\b/.test(g)||!/\bversionName\s*=?\s*['"]0\.12\.0['"]/.test(g))throw Error("Versione Gradle non impostata.");
 fs.writeFileSync(gp,g,"utf8");
-fs.writeFileSync(path.join(root,"update.json"),JSON.stringify({version:"0.12.0",versionCode:14,platform:"android",releaseUrl:"https://github.com/aldo-lang-gif/photo-ai-studio/releases/tag/v0.12.0",apkUrl:"https://github.com/aldo-lang-gif/photo-ai-studio/releases/download/v0.12.0/PIXORA-AI-0.12.0.apk"},null,2)+"\n","utf8");
-console.log("PIXORA AI 0.12.0 unified AI controls configured.");
+fs.writeFileSync(path.join(root,"update.json"),JSON.stringify({version:"0.12.0",versionCode:14,platform:"android",releaseUrl:"https://github.com/aldo-lang-gif/photo-ai-studio/releases/tag/v0.12.0",apkUrl:"https://github.com/aldo-lang-gif/photo-ai-studio/releases/download/v0.12.0/PIXORA-AI-0.12.0.apk"},null,2)+"\n");
+console.log("PIXORA 0.12.0 unified editor configured.");
