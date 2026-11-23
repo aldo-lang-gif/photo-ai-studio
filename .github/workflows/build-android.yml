@@ -1,4 +1,4 @@
-name: Build PIXORA AI Android 0.11.0
+name: Build PIXORA AI Android 0.12.0
 on:
   workflow_dispatch:
   push:
@@ -51,15 +51,16 @@ jobs:
         run: |
           test -n "$PIXORA_KEYSTORE_PASSWORD" || (echo 'Missing GitHub secret PIXORA_KEYSTORE_PASSWORD' && exit 1)
           npm run build:android
-          grep -Eq 'versionCode[[:space:]]+13' android/app/build.gradle
-          grep -Eq "versionName[[:space:]]+'0.11.0'" android/app/build.gradle
-          grep -q 'pixora-ai-011-client' www/index.html
-          grep -q 'pixora-ai-011-editor' www/index.html
+          grep -Eq 'versionCode[[:space:]]+14' android/app/build.gradle
+          grep -Eq "versionName[[:space:]]+'0.12.0'" android/app/build.gradle
+          grep -q 'pixora-ai-012-unified-editor' www/index.html
+          grep -q 'pixora-ai-012-controls' www/index.html
+          grep -q 'pixoraShowGeneratedResult' www/index.html
           test -s android/app/build/outputs/apk/debug/app-debug.apk
       - name: Save APK as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PIXORA-AI-0.11.0-apk
+          name: PIXORA-AI-0.12.0-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
@@ -69,8 +70,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           APK=android/app/build/outputs/apk/debug/app-debug.apk
-          if gh release view v0.11.0 >/dev/null 2>&1; then
-            gh release upload v0.11.0 "$APK#PIXORA-AI-0.11.0.apk" --clobber
+          if gh release view v0.12.0 >/dev/null 2>&1; then
+            gh release upload v0.12.0 "$APK#PIXORA-AI-0.12.0.apk" --clobber
           else
-            gh release create v0.11.0 "$APK#PIXORA-AI-0.11.0.apk" --title 'PIXORA AI 0.11.0' --notes 'Prompt-based generative image editing with FLUX.2 Klein 4B; no gallery save feature added.'
+            gh release create v0.12.0 "$APK#PIXORA-AI-0.12.0.apk" --title 'PIXORA AI 0.12.0' --notes 'Unified AI controls and before/after preview.'
           fi
