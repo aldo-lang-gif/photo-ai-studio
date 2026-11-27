@@ -1,4 +1,4 @@
-name: Build PIXORA AI Android 0.13.1
+name: Build PIXORA AI Android 0.13.2
 on:
   workflow_dispatch:
   push:
@@ -51,26 +51,28 @@ jobs:
         run: |
           test -n "$PIXORA_KEYSTORE_PASSWORD" || (echo 'Missing GitHub secret PIXORA_KEYSTORE_PASSWORD' && exit 1)
           npm run build:android
-          grep -Eq 'versionCode[[:space:]]+17' android/app/build.gradle
-          grep -Eq "versionName[[:space:]]+'0.13.1'" android/app/build.gradle
-          grep -q 'pixora-ai-0131-native-save-zoom-sync' www/index.html
-          ! grep -q 'pixora-ai-013-pinch-zoom' www/index.html
+          grep -Eq 'versionCode[[:space:]]+18' android/app/build.gradle
+          grep -Eq "versionName[[:space:]]+'0.13.2'" android/app/build.gradle
+          grep -q 'const installed='\''0.13.2'\'';' www/index.html
+          grep -q 'registerPlugin(PixoraUpdaterPlugin.class)' android/app/src/main/java/com/photoaistudio/app09/MainActivity.java
+          grep -q 'android.permission.REQUEST_INSTALL_PACKAGES' android/app/src/main/AndroidManifest.xml
           test -s android/app/build/outputs/apk/debug/app-debug.apk
       - name: Save APK as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PIXORA-AI-0.13.1-apk
+          name: PIXORA-AI-0.13.2-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
       - name: Create or update GitHub Release
-        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           APK=android/app/build/outputs/apk/debug/app-debug.apk
-          if gh release view v0.13.1 >/dev/null 2>&1; then
-            gh release upload v0.13.1 "$APK#PIXORA-AI-0.13.1.apk" --clobber
+          ASSET=PIXORA-AI-0.13.2.apk
+          cp "$APK" "$ASSET"
+          if gh release view v0.13.2 >/dev/null 2>&1; then
+            gh release upload v0.13.2 "$ASSET" --clobber
           else
-            gh release create v0.13.1 "$APK#PIXORA-AI-0.13.1.apk" --title 'PIXORA AI 0.13.1' --notes 'Ripristino salvataggio Galleria e zoom touch.'
+            gh release create v0.13.2 "$ASSET" --title 'PIXORA AI 0.13.2' --notes 'Aggiornamento in-app: download APK e apertura installazione Android.'
           fi
