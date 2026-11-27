@@ -88,8 +88,8 @@ for(const m of ['id="pixora-ai-013-function-restore"','id="pixora-ai-013-pinch-z
  if(!h.includes(m))throw Error("Patch 0.13.0 incompleta: "+m);
 h=h.replaceAll("0.12.1","0.13.0");
 fs.writeFileSync(hp,h,"utf8");
-let g=fs.readFileSync(gp,"utf8").replace(/(\bversionCode\s*=?\s*)\d+/,"$1"+"16").replace(/(\\bversionName\\s*=?\\s*)['"][^'"]+['"]/,"$1'0.13.0'");
-if(!/\bversionCode\s*=?\s*16\b/.test(g)||!/\\bversionName\\s*=?\\s*['"]0\\.13\\.0['"]/.test(g))throw Error("Versione Gradle 0.13.0 non impostata.");
+ let g=fs.readFileSync(gp,"utf8").replace(/(\bversionCode\s*=?\s*)\d+/,"$1"+"16").replace(/(\bversionName\s*=?\s*)['"][^'"]+['"]/,"$1'0.13.0'");
+ if(!/\bversionCode\s*=?\s*16\b/.test(g)||!/\bversionName\s*=?\s*['"]0\.13\.0['"]/.test(g))throw Error("Versione Gradle 0.13.0 non impostata.");
 fs.writeFileSync(gp,g,"utf8");
 fs.writeFileSync(path.join(root,"update.json"),JSON.stringify({version:"0.13.0",versionCode:16,platform:"android",releaseUrl:"https://github.com/aldo-lang-gif/photo-ai-studio/releases/tag/v0.13.0",apkUrl:"https://github.com/aldo-lang-gif/photo-ai-studio/releases/download/v0.13.0/PIXORA-AI-0.13.0.apk"},null,2)+"\n","utf8");
 console.log("PIXORA AI 0.13.0 pronta: Galleria, zoom touch, modifica iterativa.");
