@@ -1,7 +1,7 @@
 {
-  "version": "0.13.1",
-  "versionCode": 17,
+  "version": "0.13.2",
+  "versionCode": 18,
   "platform": "android",
-  "releaseUrl": "https://github.com/aldo-lang-gif/photo-ai-studio/releases/tag/v0.13.1",
-  "apkUrl": "https://github.com/aldo-lang-gif/photo-ai-studio/releases/download/v0.13.1/PIXORA-AI-0.13.1.apk"
+  "releaseUrl": "https://github.com/aldo-lang-gif/photo-ai-studio/releases/tag/v0.13.2",
+  "apkUrl": "https://github.com/aldo-lang-gif/photo-ai-studio/releases/download/v0.13.2/PIXORA-AI-0.13.2.apk"
 }

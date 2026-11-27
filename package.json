@@ -1,9 +1,9 @@
 {
   "name": "pixora-ai-android",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "private": true,
   "scripts": {
-    "build:android": "node scripts/prepare-android.js && node scripts/prepare-android-091.js && node scripts/prepare-android-092.js && node scripts/prepare-android-093.js && node scripts/prepare-android-094.js && node scripts/prepare-android-095.js && node scripts/prepare-android-096.js && node scripts/prepare-android-097.js && node scripts/prepare-android-098.js && node scripts/prepare-android-099.js && node scripts/prepare-android-010.js && node scripts/prepare-android-011.js && node scripts/prepare-android-012.js && node scripts/prepare-android-013.js && npx cap sync android && cd android && ./gradlew assembleDebug",
+    "build:android": "node scripts/prepare-android.js && node scripts/prepare-android-091.js && node scripts/prepare-android-092.js && node scripts/prepare-android-093.js && node scripts/prepare-android-094.js && node scripts/prepare-android-095.js && node scripts/prepare-android-096.js && node scripts/prepare-android-097.js && node scripts/prepare-android-098.js && node scripts/prepare-android-099.js && node scripts/prepare-android-010.js && node scripts/prepare-android-011.js && node scripts/prepare-android-012.js && node scripts/prepare-android-013.js && node scripts/prepare-android-014.js && npx cap sync android && cd android && ./gradlew assembleDebug",
     "test:worker": "node test/worker-011-smoke.mjs"
   },
   "dependencies": {
