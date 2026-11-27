@@ -1,4 +1,4 @@
-// PIXORA AI 0.13.2 — fix in-app APK updater and publish a stable asset filename.
+// PIXORA AI 0.13.2 — updater fix, compatible with the 0.13.1 preparation step.
 const fs = require("fs");
 const path = require("path");
 const root = process.cwd();
@@ -17,8 +17,10 @@ for (const p of [htmlPath, gradlePath, packagePath, activityPath, updaterPath, a
 
 let html = fs.readFileSync(htmlPath, "utf8");
 if (!html.includes('id="pixora-ai-096-updater"')) throw new Error("Sistema aggiornamenti PIXORA non trovato.");
-html = html.replace("const installed='0.9.7';", "const installed='0.13.2';");
-html = html.replace("PIXORA AI 0.9.7 è aggiornato.", "PIXORA AI 0.13.2 è aggiornato.");
+// La preparazione 0.13.1 aggiorna già il valore: non cercare più soltanto 0.9.7.
+if (!/const installed='[^']+';/.test(html)) throw new Error("Versione installata dell'updater non trovata.");
+html = html.replace(/const installed='[^']+';/, "const installed='0.13.2';");
+html = html.replace(/PIXORA AI [0-9.]+ è aggiornato\./, "PIXORA AI 0.13.2 è aggiornato.");
 if (!html.includes("const installed='0.13.2';")) throw new Error("Versione installata dell'updater non aggiornata.");
 fs.writeFileSync(htmlPath, html, "utf8");
 
@@ -39,12 +41,17 @@ fs.writeFileSync(gradlePath, gradle, "utf8");
 
 const pkg = JSON.parse(fs.readFileSync(packagePath, "utf8"));
 pkg.version = "0.13.2";
-pkg.scripts["build:android"] = pkg.scripts["build:android"].replace(
-  "node scripts/prepare-android-013.js",
-  "node scripts/prepare-android-013.js && node scripts/prepare-android-014.js"
-);
-if (!pkg.scripts["build:android"].includes("prepare-android-014.js")) {
-  throw new Error("Script updater 0.13.2 non inserito nella build.");
+const build = pkg.scripts["build:android"] || "";
+if (!build.includes("prepare-android-014.js")) {
+  if (!build.includes("node scripts/prepare-android-013.js")) throw new Error("Catena build Android non riconosciuta.");
+  pkg.scripts["build:android"] = build.replace(
+    "node scripts/prepare-android-013.js",
+    "node scripts/prepare-android-013.js && node scripts/prepare-android-014.js"
+  );
+}
+if (!pkg.scripts["build:android"].includes("prepare-android-014.js") ||
+    !pkg.scripts["build:android"].includes("prepare-android-015.js")) {
+  throw new Error("Catena build 0.13.2 incompleta: devono essere presenti gli script 014 e 015.");
 }
 fs.writeFileSync(packagePath, JSON.stringify(pkg, null, 2) + "\n", "utf8");
 
@@ -56,5 +63,4 @@ const manifest = {
   apkUrl: "https://github.com/aldo-lang-gif/photo-ai-studio/releases/download/v0.13.2/PIXORA-AI-0.13.2.apk"
 };
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n", "utf8");
-
-console.log("PIXORA AI 0.13.2: updater nativo verificato, versione installata aggiornata, APK URL stabile.");
+console.log("PIXORA AI 0.13.2: updater compatibile con la catena 0.13.1 e verifiche Android superate.");
